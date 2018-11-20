@@ -14,20 +14,19 @@
 
 import sys
 import numpy as np
+np.seterr(divide='ignore', invalid='ignore')
 import pandas as pd
 import csv
-import matplotlib.pyplot as plt
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import *
-from pyqtgraph.Qt import QtCore, QtGui
 
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
+import matplotlib.pyplot as plt
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from pyqtgraph.Qt import QtCore, QtGui
 
 from ui import Ui_MainWindow
 from utils.db_connector import DBConnector
-
 
 
 class MainForm(Ui_MainWindow):
@@ -40,7 +39,7 @@ class MainForm(Ui_MainWindow):
         self.axisZ = 50.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
-        self.colorMap = 'jet'
+        self.colorMap = 'ocean'
         self.colorMaps = {
             'Perceptually Uniform Sequential': [
                 'viridis', 'plasma', 'inferno', 'magma'],
@@ -65,10 +64,10 @@ class MainForm(Ui_MainWindow):
                 'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
         }
 
-    def connector(self):
-        self.pushButton_loadFile.clicked.connect(self.open_path)
+    def connection_events(self):
+        self.pushButton_loadFile.clicked.connect(self.open_filePath)
         self.pushButton_push.clicked.connect(self.update_customData)
-        self.pushButton_reset.clicked.connect(self.reset_graph)
+        self.pushButton_reset.clicked.connect(self.reset_data)
         self.comboBox_colorMap.currentIndexChanged['QString'].connect(self.update_colorMap)
         self.pushButton_connectDB.clicked.connect(self.connect_db)
         self.pushButton_updateDB.clicked.connect(self.update_db)
@@ -97,7 +96,7 @@ class MainForm(Ui_MainWindow):
                                                + len(self.colorMaps['Qualitative']))
         self.comboBox_colorMap.addItems(self.colorMaps['Miscellaneous'])
 
-        # init colorMap
+        # init colorMap, 'jet'
         self.comboBox_colorMap.setCurrentIndex(len(self.colorMaps['Perceptually Uniform Sequential']) +
                                                len(self.colorMaps['Sequential']) +
                                                len(self.colorMaps['Sequential (2)']) +
@@ -105,14 +104,14 @@ class MainForm(Ui_MainWindow):
                                                len(self.colorMaps['Qualitative']) +
                                                14 + 5)
 
-    def open_path(self):
+    def open_filePath(self):
         try:
-            fileName = QFileDialog.getOpenFileName(None, 'Load Your Data')
+            fileName = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Your Data')
             self.label_filePath.setText(fileName[0])
             self.load_3D_surface(data=fileName[0])
 
         except Exception as e:
-            print("[error code] open_path\n", e)
+            print("[error code] open_filePath\n", e)
             pass
 
     def update_customData(self):
@@ -125,12 +124,12 @@ class MainForm(Ui_MainWindow):
             print("[error code] update_customData\n", e)
             pass
 
-    def reset_graph(self):
+    def reset_data(self):
         try:
             self.reset_3D_surface()
 
         except Exception as e:
-            print("[error code] reset_graph\n", e)
+            print("[error code] reset_data\n", e)
             pass
 
     def update_colorMap(self):
@@ -143,7 +142,6 @@ class MainForm(Ui_MainWindow):
             for z in self.depthQueue:
                 minZ = np.min(z)
                 maxZ = np.max(z)
-                np.seterr(divide='ignore', invalid='ignore')    # ignore(main.py:246: RuntimeWarning: invalid value encountered in true_divide)
                 rgba_img = cmap((z - minZ) / (maxZ - minZ))
                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
                 gls_item.scale(x=.5, y=.5, z=.5)
@@ -169,11 +167,25 @@ class MainForm(Ui_MainWindow):
 
             # Simple surface plot example
             z = np.array([[0]])
+            # z = np.array([[-50, 0, -50],
+            #               [0, 50, 0],
+            #               [0, 0, 0]])
+            # z = np.array([
+            #     [1000, 1200, 1400, 1100],
+            #     [1000, 1200, 1400, 1100],
+            #     [1400, 1400, 1400, 1100],
+            #     [1000, 1400, 1400, 1100]])
             colorMap = self.comboBox_colorMap.currentText()
             cmap = plt.get_cmap(self.colorMap)
             minZ = np.min(z)
             maxZ = np.max(z)
             rgba_img = cmap((z - minZ) / (maxZ - minZ))
+
+            # plt.imshow(z, cmap=cmap)
+            # plt.colorbar()
+            # plt.clim(minZ, maxZ)
+            # plt.show()
+
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, shader='normalColor', color=(0.5, 0.5, 1, 1))
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
             gls_item.scale(x=.5, y=.5, z=.5)  # x, y, z 비율값
@@ -284,7 +296,7 @@ class MainForm(Ui_MainWindow):
 
     def disconnect_db(self):
         try:
-            print("[Message] End timer, Disconnect DB")
+            print("[Message] End timer thread, Disconnect DB")
 
         except Exception as e:
             print("[error code] disconnect_db\n", e)
@@ -341,7 +353,7 @@ class MainForm(Ui_MainWindow):
 
     def real_time_graph(self):
         try:
-            print("[Message] Start timer, Update graph")
+            print("[Message] &Start timer thread, Update graph")
             self.start_timer()
             self.reset_3D_surface()
             data = mysql_connector.select_data()
@@ -386,7 +398,7 @@ if __name__ == "__main__":
 
     ui = MainForm()
     ui.setupUi(MainWindow)
-    ui.connector()
+    ui.connection_events()
     ui.init_3D_surface()
     ui.colorMapUi()
     ui.set_timer()
