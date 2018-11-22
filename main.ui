@@ -47,7 +47,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Load File</string>
+     <string> Load File</string>
     </property>
     <property name="icon">
      <iconset>

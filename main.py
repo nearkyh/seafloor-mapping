@@ -63,6 +63,7 @@ class MainForm(Ui_MainWindow):
                 'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'hsv',
                 'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
         }
+        self.set_timer()
 
     def connection_events(self):
         self.pushButton_loadFile.clicked.connect(self.open_filePath)
@@ -309,7 +310,8 @@ class MainForm(Ui_MainWindow):
     def update_db(self):
         try:
             self.reset_3D_surface()
-            data = mysql_connector.select_data()
+            conn = mysql_connector.connect_mysql()
+            data = mysql_connector.select_data(conn=conn)
             for i in range(len(data)):
                 '''
                 latitude  : data[i][1]
@@ -356,7 +358,8 @@ class MainForm(Ui_MainWindow):
             print("[Message] &Start timer thread, Update graph")
             self.start_timer()
             self.reset_3D_surface()
-            data = mysql_connector.select_data()
+            conn = mysql_connector.connect_mysql()
+            data = mysql_connector.select_data(conn=conn)
             for i in range(len(data)):
                 '''
                 latitude  : data[i][1]
@@ -401,7 +404,6 @@ if __name__ == "__main__":
     ui.connection_events()
     ui.init_3D_surface()
     ui.colorMapUi()
-    ui.set_timer()
 
     MainWindow.show()
     sys.exit(app.exec_())

@@ -12,7 +12,6 @@ class DBConnector:
         self.db = 'seafloor_mapping'
         self.charset = 'utf8'
 
-
     def connect_mysql(self):
         return pymysql.connect(host=self.host,
                                port=self.port,
@@ -21,20 +20,18 @@ class DBConnector:
                                db=self.db,
                                charset=self.charset)
 
-
     def close_mysql(self):
         self.connect_mysql().close()
 
-
-    def insert_data(self, curs, conn, latitude, longitude, depth, timestamp):
+    def insert_data(self, conn, latitude, longitude, depth, timestamp):
         sql = """insert into data(latitude, longitude, depth, timestamp)
                  values({0},{1},{2},{3})""".format(latitude, longitude, depth, timestamp)
+        curs = conn.cursor()
         curs.execute(sql)
         conn.commit()
 
-
-    def select_data(self):
-        curs = self.connect_mysql().cursor()
+    def select_data(self, conn):
+        curs = conn.cursor()
         sql = "select * from data"
         curs.execute(sql)
 

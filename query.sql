@@ -16,7 +16,6 @@ create table `data`(
 key `_id` (`_id`)
 ) engine=InnoDB default charset=utf8;
 
-
 INSERT INTO `seafloor_mapping`.`data` (
 `_id`, `latitude`, `longitude`, `depth`, `timestamp`
 ) VALUES (
@@ -27,29 +26,23 @@ select * from data;
 
 drop table data;
 
-INSERT INTO `seafloor_mapping`.`data` (
-`_id`, `latitude`, `longitude`, `depth`, `timestamp`
-) VALUES (
-'1', '0', '1', '-6', '154017038.7213247'
-);
-
 
 INSERT INTO `seafloor_mapping`.`data` (
 `latitude`, `longitude`, `depth`, `timestamp`
 ) VALUES (
-0,0,0,0
+35.153056,129.131650,51.0,0
 );
 
 INSERT INTO `seafloor_mapping`.`data` (
 `latitude`, `longitude`, `depth`, `timestamp`
 ) VALUES (
-0,1,8.5,0
+35.153055,129.131761,52.0,0
 );
 
 INSERT INTO `seafloor_mapping`.`data` (
 `latitude`, `longitude`, `depth`, `timestamp`
 ) VALUES (
-0,2,0,0
+35.153054,129.131872,51.0,0
 );
 
 INSERT INTO `seafloor_mapping`.`data` (
@@ -213,35 +206,3 @@ INSERT INTO `seafloor_mapping`.`data` (
 ) VALUES (
 0,29,0,0
 );
-
-1,0,0
-1,1,8.4
-1,2,0
-1,3,0
-1,4,8.7
-1,5,8
-1,6,0
-1,7,7
-1,8,0
-1,9,6.5
-1,10,0
-1,11,5.2
-1,12,0
-1,13,3.7
-1,14,0
-1,15,0
-1,16,2.8
-1,17,2.7
-1,18,0
-1,19,0
-1,20,4.1
-1,21,0
-1,22,1.2
-1,23,0
-1,24,-2.5
-1,25,0
-1,26,-3.5
-1,27,0
-1,28,-3.7
-1,29,0
-
