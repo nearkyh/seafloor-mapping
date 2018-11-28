@@ -34,12 +34,13 @@ class MainForm(Ui_MainWindow):
     def __init__(self):
         super(MainForm, self).__init__()
 
-        self.axisX = 50
-        self.axisY = 50
-        self.axisZ = 50.0
+        self.axisX = 100
+        self.axisY = 100
+        self.axisZ = 100.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
-        self.colorMap = 'ocean'
+        
+        self.colorMap = 'brg'
         self.colorMaps = {
             'Perceptually Uniform Sequential': [
                 'viridis', 'plasma', 'inferno', 'magma'],
@@ -63,6 +64,7 @@ class MainForm(Ui_MainWindow):
                 'gnuplot', 'gnuplot2', 'CMRmap', 'cubehelix', 'brg', 'hsv',
                 'gist_rainbow', 'rainbow', 'jet', 'nipy_spectral', 'gist_ncar']
         }
+        
         self.set_timer()
 
     def connection_events(self):
@@ -146,7 +148,7 @@ class MainForm(Ui_MainWindow):
                 rgba_img = cmap((z - minZ) / (maxZ - minZ))
                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
                 gls_item.scale(x=.5, y=.5, z=.5)
-                gls_item.translate(-10, -10, 0)
+                gls_item.translate(dx=0, dy=0, dz=0)
                 self.graphicsView.addItem(gls_item)
 
         except Exception as e:
@@ -158,13 +160,13 @@ class MainForm(Ui_MainWindow):
             # Set graphics view
             self.graphicsView.show()
             self.graphicsView.setBackgroundColor('k')
-            self.graphicsView.setCameraPosition(distance=50, elevation=None, azimuth=None)
+            self.graphicsView.setCameraPosition(distance=300, elevation=None, azimuth=None)
 
             # Add a grid to the view
-            g = gl.GLGridItem()
-            g.scale(x=2, y=2, z=1)
-            g.setDepthValue(10) # draw grid after surfaces since they may be translucent
-            self.graphicsView.addItem(g)
+            glg = gl.GLGridItem()
+            glg.scale(x=10, y=10, z=10)
+            glg.setDepthValue(10) # draw grid after surfaces since they may be translucent
+            self.graphicsView.addItem(glg)
 
             # Simple surface plot example
             z = np.array([[0]])
@@ -189,8 +191,8 @@ class MainForm(Ui_MainWindow):
 
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, shader='normalColor', color=(0.5, 0.5, 1, 1))
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-            gls_item.scale(x=.5, y=.5, z=.5)  # x, y, z 비율값
-            gls_item.translate(-10, -10, 0)  # 시작점 (x, y, z)
+            gls_item.scale(x=.5, y=.5, z=.5)
+            gls_item.translate(dx=0, dy=0, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
 
@@ -222,7 +224,7 @@ class MainForm(Ui_MainWindow):
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
             gls_item.scale(x=.5, y=.5, z=.5)
-            gls_item.translate(-10, -10, 0)
+            gls_item.translate(dx=0, dy=0, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
 
@@ -264,8 +266,14 @@ class MainForm(Ui_MainWindow):
                 # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
                 # gls_item = gl.GLSurfacePlotItem(x=x, y=y, z=z, colors=rgba_img)
                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-                gls_item.scale(x=.5, y=.5, z=.5)
-                gls_item.translate(-10, -10, 0)
+                gls_item.scale(x=1, y=1, z=1)
+                gls_item.translate(dx=0, dy=0, dz=0)
+                self.graphicsView.addItem(gls_item)
+                self.depthQueue.append(z)
+
+                gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+                gls_item.scale(x=1, y=1, z=1)
+                gls_item.translate(dx=30, dy=0, dz=0)
                 self.graphicsView.addItem(gls_item)
                 self.depthQueue.append(z)
 
@@ -321,6 +329,7 @@ class MainForm(Ui_MainWindow):
                 latitude = data[i][1]
                 longitude = data[i][2]
                 depth = float(data[i][3])
+                depth = self.axisZ - depth
                 self.dataArr[latitude, longitude] = depth
 
             # Surface plot data
@@ -334,7 +343,7 @@ class MainForm(Ui_MainWindow):
             ## Add a grid to the view
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
             gls_item.scale(x=.5, y=.5, z=.5)
-            gls_item.translate(-10, -10, 0)
+            gls_item.translate(dx=0, dy=0, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
 
@@ -347,7 +356,7 @@ class MainForm(Ui_MainWindow):
         self.timer.setSingleShot(False)
         self.timer.timeout.connect(self.real_time_graph)
 
-    def start_timer(self, sec=10000):
+    def start_timer(self, sec=5000):
         self.timer.start(sec)
 
     def end_timer(self):
@@ -357,34 +366,7 @@ class MainForm(Ui_MainWindow):
         try:
             print("[Message] &Start timer thread, Update graph")
             self.start_timer()
-            self.reset_3D_surface()
-            conn = mysql_connector.connect_mysql()
-            data = mysql_connector.select_data(conn=conn)
-            for i in range(len(data)):
-                '''
-                latitude  : data[i][1]
-                longitude : data[i][2]
-                depth     : data[i][3]
-                '''
-                latitude = data[i][1]
-                longitude = data[i][2]
-                depth = float(data[i][3])
-                self.dataArr[latitude, longitude] = depth
-
-            # Surface plot data
-            z = self.dataArr
-            colorMap = self.comboBox_colorMap.currentText()
-            cmap = plt.get_cmap(colorMap)
-            minZ = np.min(z)
-            maxZ = np.max(z)
-            rgba_img = cmap((z - minZ) / (maxZ - minZ))
-
-            ## Add a grid to the view
-            gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-            gls_item.scale(x=.5, y=.5, z=.5)
-            gls_item.translate(-10, -10, 0)
-            self.graphicsView.addItem(gls_item)
-            self.depthQueue.append(z)
+            self.update_db()
 
         except Exception as e:
             print("[error code] update_db\n", e)
