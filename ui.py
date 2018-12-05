@@ -88,6 +88,9 @@ class Ui_MainWindow(object):
         self.pushButton_disconnectDB = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_disconnectDB.setGeometry(QtCore.QRect(760, 510, 211, 31))
         self.pushButton_disconnectDB.setObjectName("pushButton_disconnectDB")
+        self.pushButton_virtualData = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_virtualData.setGeometry(QtCore.QRect(750, 680, 231, 31))
+        self.pushButton_virtualData.setObjectName("pushButton_virtualData")
         self.listWidget_2.raise_()
         self.listWidget.raise_()
         self.listWidget_customData.raise_()
@@ -110,6 +113,7 @@ class Ui_MainWindow(object):
         self.label_database.raise_()
         self.pushButton_connectDB.raise_()
         self.pushButton_disconnectDB.raise_()
+        self.pushButton_virtualData.raise_()
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -134,6 +138,7 @@ class Ui_MainWindow(object):
         self.label_database.setText(_translate("MainWindow", "Database"))
         self.pushButton_connectDB.setText(_translate("MainWindow", "Connect"))
         self.pushButton_disconnectDB.setText(_translate("MainWindow", "Disconnect"))
+        self.pushButton_virtualData.setText(_translate("MainWindow", "Virtual Data"))
 
 
 if __name__ == "__main__":

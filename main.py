@@ -27,6 +27,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 
 from ui import Ui_MainWindow
 from utils.db_connector import DBConnector
+from utils.location_api import LocationAPI
 
 
 class MainForm(Ui_MainWindow):
@@ -34,9 +35,9 @@ class MainForm(Ui_MainWindow):
     def __init__(self):
         super(MainForm, self).__init__()
 
-        self.axisX = 100
-        self.axisY = 100
-        self.axisZ = 100.0
+        self.axisX = 200
+        self.axisY = 200
+        self.axisZ = 50.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
         
@@ -75,6 +76,7 @@ class MainForm(Ui_MainWindow):
         self.pushButton_connectDB.clicked.connect(self.connect_db)
         self.pushButton_updateDB.clicked.connect(self.update_db)
         self.pushButton_disconnectDB.clicked.connect(self.disconnect_db)
+        self.pushButton_virtualData.clicked.connect(self.input_virtualData)
 
     def colorMapUi(self):
         self.comboBox_colorMap.addItems(self.colorMaps['Perceptually Uniform Sequential'])
@@ -147,8 +149,8 @@ class MainForm(Ui_MainWindow):
                 maxZ = np.max(z)
                 rgba_img = cmap((z - minZ) / (maxZ - minZ))
                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-                gls_item.scale(x=.5, y=.5, z=.5)
-                gls_item.translate(dx=0, dy=0, dz=0)
+                gls_item.scale(x=1, y=1, z=1)
+                gls_item.translate(dx=-100, dy=-100, dz=0)
                 self.graphicsView.addItem(gls_item)
 
         except Exception as e:
@@ -170,6 +172,7 @@ class MainForm(Ui_MainWindow):
 
             # Simple surface plot example
             z = np.array([[0]])
+            # z = np.array([[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0],[50.0,0,0]])
             # z = np.array([[-50, 0, -50],
             #               [0, 50, 0],
             #               [0, 0, 0]])
@@ -191,7 +194,7 @@ class MainForm(Ui_MainWindow):
 
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, shader='normalColor', color=(0.5, 0.5, 1, 1))
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-            gls_item.scale(x=.5, y=.5, z=.5)
+            gls_item.scale(x=1, y=1, z=1)
             gls_item.translate(dx=0, dy=0, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
@@ -223,8 +226,8 @@ class MainForm(Ui_MainWindow):
             # Add a grid to the view
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-            gls_item.scale(x=.5, y=.5, z=.5)
-            gls_item.translate(dx=0, dy=0, dz=0)
+            gls_item.scale(x=1, y=1, z=1)
+            gls_item.translate(dx=-100, dy=-100, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
 
@@ -342,7 +345,7 @@ class MainForm(Ui_MainWindow):
 
             ## Add a grid to the view
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-            gls_item.scale(x=.5, y=.5, z=.5)
+            gls_item.scale(x=1, y=1, z=1)
             gls_item.translate(dx=0, dy=0, dz=0)
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
@@ -372,11 +375,238 @@ class MainForm(Ui_MainWindow):
             print("[error code] update_db\n", e)
             pass
 
+    # def input_virtualData(self):
+    #     data = 'virtual_data.csv'
+    #     f = open('{0}'.format(data), 'r')
+    #     csvReader = csv.reader(f)
+    #
+    #     rowArr = []
+    #     for row in csvReader:
+    #         rowArr.append(row)
+    #     f.close()
+    #
+    #     # Remove label
+    #     del rowArr[0]
+    #
+    #     # First point(depth)
+    #     dx, dy = 0, 0
+    #     firstDepthValue = float(rowArr[1][2])
+    #
+    #     # Surface plot data
+    #     depth = self.axisZ - firstDepthValue
+    #     z = np.array([[depth, 0.0], [0.0, 0.0]])
+    #     # z = np.array([[depth, depth], [depth, depth]])
+    #     colorMap = self.comboBox_colorMap.currentText()
+    #     cmap = plt.get_cmap(colorMap)
+    #     minZ = np.min(z)
+    #     maxZ = np.max(z)
+    #     rgba_img = cmap((z - minZ) / (maxZ - minZ))
+    #
+    #     ## Add a grid to the view
+    #     gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #     gls_item.scale(x=1, y=1, z=1)
+    #     gls_item.translate(dx=dx, dy=dy, dz=0)
+    #     self.graphicsView.addItem(gls_item)
+    #     self.depthQueue.append(z)
+    #
+    #     queueSize = 2
+    #     latitudeQueue = [] * queueSize
+    #     longitudeQueue = [] * queueSize
+    #     depthQueue = [] * queueSize
+    #     dxList = [0]
+    #     dyList = [0]
+    #     for i in range(len(rowArr)):
+    #         latitude = '{0:.6f}'.format(float(rowArr[i][0]))
+    #         longitude = '{0:.6f}'.format(float(rowArr[i][1]))
+    #         depth = float(rowArr[i][2])
+    #
+    #         latitudeQueue.append(latitude)
+    #         longitudeQueue.append(longitude)
+    #         depthQueue.append(depth)
+    #
+    #         if len(latitudeQueue[-queueSize:]) > 1:
+    #             distance = locationAPI.distance(latitude1=float(latitudeQueue[-2:][0]),
+    #                                             longitude1=float(longitudeQueue[-2:][0]),
+    #                                             latitude2=float(latitudeQueue[-2:][1]),
+    #                                             longitude2=float(longitudeQueue[-2:][1]))
+    #             bearing = locationAPI.bearing(latitude1=float(latitudeQueue[-2:][0]),
+    #                                           longitude1=float(longitudeQueue[-2:][0]),
+    #                                           latitude2=float(latitudeQueue[-2:][1]),
+    #                                           longitude2=float(longitudeQueue[-2:][1]))
+    #             direction = locationAPI.direction(bearing=bearing)
+    #             dx =  dx + direction['dx']
+    #             dy = dy + direction['dy']
+    #             dxList.append(dx)
+    #             dyList.append(dy)
+    #
+    #             # Surface plot data
+    #             depth = self.axisZ - depth
+    #             z = np.array([[depth, 0.0], [0.0, 0.0]])
+    #             colorMap = self.comboBox_colorMap.currentText()
+    #             cmap = plt.get_cmap(colorMap)
+    #             minZ = np.min(z)
+    #             maxZ = np.max(z)
+    #             rgba_img = cmap((z - minZ) / (maxZ - minZ))
+    #
+    #             ## Add a grid to the view
+    #             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #             gls_item.scale(x=1, y=1, z=1)
+    #             gls_item.translate(dx=dx, dy=dy, dz=0)
+    #             self.graphicsView.addItem(gls_item)
+    #             self.depthQueue.append(z)
+    #
+        # Scattering test
+        # plt.scatter(dxList, dyList, color='b', marker='o')
+        # plt.show()
+
+    # def input_virtualData(self):
+    #     data = 'virtual_data.csv'
+    #     f = open('{0}'.format(data), 'r')
+    #     csvReader = csv.reader(f)
+    #
+    #     rowArr = []
+    #     for row in csvReader:
+    #         rowArr.append(row)
+    #     f.close()
+    #
+    #     # Remove label
+    #     del rowArr[0]
+    #
+    #     # Data queue
+    #     queueSize = 2
+    #     latitudeQueue = [] * queueSize
+    #     longitudeQueue = [] * queueSize
+    #     depthQueue = [] * queueSize
+    #     # First point(depth)
+    #     dx, dy = 100, 100   # Center point
+    #     dxList = [dx]
+    #     dyList = [dy]
+    #     for i in range(len(rowArr)):
+    #         latitude = '{0:.6f}'.format(float(rowArr[i][0]))
+    #         longitude = '{0:.6f}'.format(float(rowArr[i][1]))
+    #         depth = float(rowArr[i][2])
+    #
+    #         print(latitude, longitude, depth)
+    #
+    #         latitudeQueue.append(latitude)
+    #         longitudeQueue.append(longitude)
+    #         depthQueue.append(depth)
+    #
+    #         if len(latitudeQueue[-queueSize:]) > 1:
+    #             distance = locationAPI.distance(latitude1=float(latitudeQueue[-2:][0]),
+    #                                             longitude1=float(longitudeQueue[-2:][0]),
+    #                                             latitude2=float(latitudeQueue[-2:][1]),
+    #                                             longitude2=float(longitudeQueue[-2:][1]))
+    #             bearing = locationAPI.bearing(latitude1=float(latitudeQueue[-2:][0]),
+    #                                           longitude1=float(longitudeQueue[-2:][0]),
+    #                                           latitude2=float(latitudeQueue[-2:][1]),
+    #                                           longitude2=float(longitudeQueue[-2:][1]))
+    #             direction = locationAPI.direction(bearing=bearing)
+    #             dx =  dx + direction['dx']
+    #             dy = dy + direction['dy']
+    #             dxList.append(dx)
+    #             dyList.append(dy)
+    #
+    #     if len(dxList) == len(dyList) == len(depthQueue):
+    #         for i in range(len(depthQueue)):
+    #             latitude = dxList[i]
+    #             longtitude = dyList[i]
+    #             depth = depthQueue[i]
+    #             depth = self.axisZ - depth
+    #             self.dataArr[latitude, longtitude] = depth
+    #
+    #
+    #     # Surface plot data
+    #     z = self.dataArr
+    #     colorMap = self.comboBox_colorMap.currentText()
+    #     cmap = plt.get_cmap(colorMap)
+    #     minZ = np.min(z)
+    #     maxZ = np.max(z)
+    #     rgba_img = cmap((z - minZ) / (maxZ - minZ))
+    #
+    #     # Add a grid to the view
+    #     gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #     gls_item.scale(x=1, y=1, z=1)
+    #     gls_item.translate(dx=-100, dy=-100, dz=0)
+    #     self.graphicsView.addItem(gls_item)
+    #     self.depthQueue.append(z)
+
+    def input_virtualData(self):
+        # Update DB
+        self.reset_3D_surface()
+        conn = mysql_connector.connect_mysql()
+        data = mysql_connector.select_data2(conn=conn)
+        firstLatitudeValue = float('{0:.6f}'.format(float(data[0][1])))
+        firstLongitudeValue = float('{0:.6f}'.format(float(data[0][2])))
+        firstDepthValue = float('{0:.6f}'.format(float(data[0][3])))
+
+        # Data queue
+        queueSize = 2
+        latitudeQueue = [] * queueSize
+        longitudeQueue = [] * queueSize
+        depthQueue = [] * queueSize
+        # First point(depth)
+        dx, dy = 100, 100   # Center point
+        dxList = [dx]
+        dyList = [dy]
+        for i in range(len(data)):
+            '''
+            latitude  : data[i][1]
+            longitude : data[i][2]
+            depth     : data[i][3]
+            '''
+            latitude = float('{0:.6f}'.format(float(data[i][1])))
+            longitude = float('{0:.6f}'.format(float(data[i][2])))
+            depth = float('{0:.6f}'.format(float(data[i][3])))
+
+            latitudeQueue.append(latitude)
+            longitudeQueue.append(longitude)
+            depthQueue.append(depth)
+
+            if len(latitudeQueue[-queueSize:]) > 1:
+                distance = locationAPI.distance(latitude1=latitudeQueue[-2:][0],
+                                                longitude1=longitudeQueue[-2:][0],
+                                                latitude2=latitudeQueue[-2:][1],
+                                                longitude2=longitudeQueue[-2:][1])
+                bearing = locationAPI.bearing(latitude1=latitudeQueue[-2:][0],
+                                              longitude1=longitudeQueue[-2:][0],
+                                              latitude2=latitudeQueue[-2:][1],
+                                              longitude2=longitudeQueue[-2:][1])
+                direction = locationAPI.direction(bearing=bearing)
+                dx =  dx + direction['dx']
+                dy = dy + direction['dy']
+                dxList.append(dx)
+                dyList.append(dy)
+
+        if len(dxList) == len(dyList) == len(depthQueue):
+            for i in range(len(depthQueue)):
+                latitude = dxList[i]
+                longtitude = dyList[i]
+                depth = depthQueue[i]
+                depth = self.axisZ - depth
+                self.dataArr[latitude, longtitude] = depth
+
+        # Surface plot data
+        z = self.dataArr
+        colorMap = self.comboBox_colorMap.currentText()
+        cmap = plt.get_cmap(colorMap)
+        minZ = np.min(z)
+        maxZ = np.max(z)
+        rgba_img = cmap((z - minZ) / (maxZ - minZ))
+
+        # Add a grid to the view
+        gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+        gls_item.scale(x=1, y=1, z=1)
+        gls_item.translate(dx=-100, dy=-100, dz=0)
+        self.graphicsView.addItem(gls_item)
+        self.depthQueue.append(z)
+
 
 
 if __name__ == "__main__":
 
     mysql_connector = DBConnector()
+    locationAPI = LocationAPI()
 
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()

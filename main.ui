@@ -289,6 +289,19 @@
      <string>Disconnect</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_virtualData">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>680</y>
+      <width>231</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Virtual Data</string>
+    </property>
+   </widget>
    <zorder>listWidget_2</zorder>
    <zorder>listWidget</zorder>
    <zorder>listWidget_customData</zorder>
@@ -311,6 +324,7 @@
    <zorder>label_database</zorder>
    <zorder>pushButton_connectDB</zorder>
    <zorder>pushButton_disconnectDB</zorder>
+   <zorder>pushButton_virtualData</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

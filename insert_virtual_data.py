@@ -26,7 +26,7 @@ for i in range(len(rowArr)):
 
     print(latitude, longitude, depth)
 
-    # db_conn.insert_data(
+    # db_conn.insert_data2(
     #     conn=conn,
     #     latitude=latitude,
     #     longitude=longitude,

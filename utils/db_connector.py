@@ -30,9 +30,23 @@ class DBConnector:
         curs.execute(sql)
         conn.commit()
 
+    def insert_data2(self, conn, latitude, longitude, depth, timestamp):
+        sql = """insert into data2(latitude, longitude, depth, timestamp)
+                 values({0},{1},{2},{3})""".format(latitude, longitude, depth, timestamp)
+        curs = conn.cursor()
+        curs.execute(sql)
+        conn.commit()
+
     def select_data(self, conn):
         curs = conn.cursor()
         sql = "select * from data"
+        curs.execute(sql)
+
+        return curs.fetchall()
+
+    def select_data2(self, conn):
+        curs = conn.cursor()
+        sql = "select * from data2"
         curs.execute(sql)
 
         return curs.fetchall()
