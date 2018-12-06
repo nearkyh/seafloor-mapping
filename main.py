@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph.Qt import QtCore, QtGui
 
-from ui import Ui_MainWindow
+from utils.ui import Ui_MainWindow
 from utils.db_connector import DBConnector
 from utils.location_api import LocationAPI
 
@@ -37,7 +37,7 @@ class MainForm(Ui_MainWindow):
 
         self.axisX = 200
         self.axisY = 200
-        self.axisZ = 50.0
+        self.axisZ = 80.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
         
@@ -192,6 +192,8 @@ class MainForm(Ui_MainWindow):
             # plt.clim(minZ, maxZ)
             # plt.show()
 
+            # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
+            # gls_item = gl.GLSurfacePlotItem(x=x, y=y, z=z, colors=rgba_img)
             # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, shader='normalColor', color=(0.5, 0.5, 1, 1))
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
             gls_item.scale(x=1, y=1, z=1)
@@ -224,7 +226,6 @@ class MainForm(Ui_MainWindow):
             rgba_img = cmap((z - minZ) / (maxZ - minZ))
 
             # Add a grid to the view
-            # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
             gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
             gls_item.scale(x=1, y=1, z=1)
             gls_item.translate(dx=-100, dy=-100, dz=0)
@@ -256,9 +257,8 @@ class MainForm(Ui_MainWindow):
                 f.close()
 
                 # Surface plot data
-                # x = np.array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29])
-                # y = np.array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29])
-                z = np.array(rowArr)
+                # z = np.array(rowArr)
+                z = np.array(rowArr) * 10
                 colorMap = self.comboBox_colorMap.currentText()
                 cmap = plt.get_cmap(colorMap)
                 minZ = np.min(z)
@@ -266,8 +266,6 @@ class MainForm(Ui_MainWindow):
                 rgba_img = cmap((z - minZ) / (maxZ - minZ))
 
                 ## Add a grid to the view
-                # gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, smooth=True, shader='normalColor', glOptions='opaque')
-                # gls_item = gl.GLSurfacePlotItem(x=x, y=y, z=z, colors=rgba_img)
                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
                 gls_item.scale(x=1, y=1, z=1)
                 gls_item.translate(dx=0, dy=0, dz=0)
@@ -415,6 +413,7 @@ class MainForm(Ui_MainWindow):
     #     depthQueue = [] * queueSize
     #     dxList = [0]
     #     dyList = [0]
+    #     count = 1
     #     for i in range(len(rowArr)):
     #         latitude = '{0:.6f}'.format(float(rowArr[i][0]))
     #         longitude = '{0:.6f}'.format(float(rowArr[i][1]))
@@ -455,6 +454,49 @@ class MainForm(Ui_MainWindow):
     #             self.graphicsView.addItem(gls_item)
     #             self.depthQueue.append(z)
     #
+    #             # Smoothing graph, 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
+    #             if (dx == dx) and (dy == dy):
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx, dy=dy + count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx + count, dy=dy, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx, dy=dy - count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx - count, dy=dy, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx + count, dy=dy + count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx - count, dy=dy - count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx + count, dy=dy - count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+    #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #                 gls_item.scale(x=1, y=1, z=1)
+    #                 gls_item.translate(dx=dx - count, dy=dy + count, dz=0)
+    #                 self.graphicsView.addItem(gls_item)
+    #                 self.depthQueue.append(z)
+
         # Scattering test
         # plt.scatter(dxList, dyList, color='b', marker='o')
         # plt.show()
@@ -579,6 +621,8 @@ class MainForm(Ui_MainWindow):
                 dyList.append(dy)
 
         if len(dxList) == len(dyList) == len(depthQueue):
+            count = 1
+            _depth = [] * 2
             for i in range(len(depthQueue)):
                 latitude = dxList[i]
                 longitude = dyList[i]
@@ -586,8 +630,37 @@ class MainForm(Ui_MainWindow):
                 depth = self.axisZ - depth
                 self.dataArr[latitude, longitude] = depth
 
+                # Apply smoothing graph
+                _depth.append(depth)
+                if (latitude == latitude) and (longitude == longitude):
+                    if len(_depth) > 1:
+                        # Mapping 될 지점의 Depth 값은 주변의 Depth 값들의 평균 값을 계산하여 적용
+                        depth = float((_depth[-2:][0] + _depth[-2:][1]) / 2)
+                        # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
+                        # 0, 360 Degree (dx=-1, dy=0)
+                        self.dataArr[latitude - count, longitude] = depth
+                        # 45 Degree (dx=-1, dy=+1)
+                        self.dataArr[latitude - count, longitude + count] = depth
+                        # 90 Degree (dx=0, dy=+1)
+                        self.dataArr[latitude, longitude + count] = depth
+                        # 135 Degree (dx=+1, dy=+1)
+                        self.dataArr[latitude + count, longitude + count] = depth
+                        # 180 Degree (dx=+1, dy=0)
+                        self.dataArr[latitude + count, longitude] = depth
+                        # 225 Degree (dx=+1, dy=-1)
+                        self.dataArr[latitude + count, longitude - count] = depth
+                        # 270 Degree (dx=0, dy=-1)
+                        self.dataArr[latitude, longitude - count] = depth
+                        # 315 Degree (dx=-1, dy=-1)
+                        self.dataArr[latitude - count, longitude - count] = depth
+
+
         # Surface plot data
         z = self.dataArr
+        np.set_printoptions(threshold=np.nan)
+        f = open("data.txt", 'w')
+        f.write(str(z))
+        f.close()
         colorMap = self.comboBox_colorMap.currentText()
         cmap = plt.get_cmap(colorMap)
         minZ = np.min(z)
