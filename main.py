@@ -208,14 +208,14 @@ class MainForm(Ui_MainWindow):
             # Input custom data
             latitude = self.textEdit_latitude.toPlainText()
             latitude = int(latitude)
-            longtitude = self.textEdit_longtitude.toPlainText()
-            longtitude = int(longtitude)
+            longitude = self.textEdit_longitude.toPlainText()
+            longitude = int(longitude)
             depth = self.textEdit_depth.toPlainText()
             depth = float(depth)
             depth = self.axisZ - depth
 
             # Surface plot data
-            self.dataArr[latitude, longtitude] = depth
+            self.dataArr[latitude, longitude] = depth
             z = self.dataArr
             colorMap = self.comboBox_colorMap.currentText()
             cmap = plt.get_cmap(colorMap)
@@ -234,8 +234,8 @@ class MainForm(Ui_MainWindow):
             # Reset textEdit
             # if str(latitude):
             #     self.textEdit_latitude.setText("")
-            # if str(longtitude):
-            #     self.textEdit_longtitude.setText("")
+            # if str(longitude):
+            #     self.textEdit_longitude.setText("")
             # if str(depth):
             #     self.textEdit_depth.setText("")
 
@@ -292,7 +292,7 @@ class MainForm(Ui_MainWindow):
             self.init_3D_surface()                              # Initialize graph
             self.label_filePath.setText("")
             self.textEdit_latitude.setText("")
-            self.textEdit_longtitude.setText("")
+            self.textEdit_longitude.setText("")
             self.textEdit_depth.setText("")
 
         except Exception as e:
@@ -510,10 +510,10 @@ class MainForm(Ui_MainWindow):
     #     if len(dxList) == len(dyList) == len(depthQueue):
     #         for i in range(len(depthQueue)):
     #             latitude = dxList[i]
-    #             longtitude = dyList[i]
+    #             longitude = dyList[i]
     #             depth = depthQueue[i]
     #             depth = self.axisZ - depth
-    #             self.dataArr[latitude, longtitude] = depth
+    #             self.dataArr[latitude, longitude] = depth
     #
     #
     #     # Surface plot data
@@ -581,10 +581,10 @@ class MainForm(Ui_MainWindow):
         if len(dxList) == len(dyList) == len(depthQueue):
             for i in range(len(depthQueue)):
                 latitude = dxList[i]
-                longtitude = dyList[i]
+                longitude = dyList[i]
                 depth = depthQueue[i]
                 depth = self.axisZ - depth
-                self.dataArr[latitude, longtitude] = depth
+                self.dataArr[latitude, longitude] = depth
 
         # Surface plot data
         z = self.dataArr

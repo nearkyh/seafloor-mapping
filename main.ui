@@ -100,7 +100,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit_longtitude">
+   <widget class="QTextEdit" name="textEdit_longitude">
     <property name="geometry">
      <rect>
       <x>860</x>
@@ -120,7 +120,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label_longtitude">
+   <widget class="QLabel" name="label_longitude">
     <property name="geometry">
      <rect>
       <x>770</x>
@@ -130,7 +130,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Longtitude</string>
+     <string>Longitude</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_depth">
@@ -310,10 +310,10 @@
    <zorder>label_inputData</zorder>
    <zorder>label_latitude</zorder>
    <zorder>textEdit_latitude</zorder>
-   <zorder>textEdit_longtitude</zorder>
+   <zorder>textEdit_longitude</zorder>
    <zorder>textEdit_depth</zorder>
    <zorder>pushButton_push</zorder>
-   <zorder>label_longtitude</zorder>
+   <zorder>label_longitude</zorder>
    <zorder>label_depth</zorder>
    <zorder>pushButton_reset</zorder>
    <zorder>pushButton_updateDB</zorder>
