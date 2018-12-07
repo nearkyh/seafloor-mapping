@@ -411,9 +411,9 @@ class MainForm(Ui_MainWindow):
     #     latitudeQueue = [] * queueSize
     #     longitudeQueue = [] * queueSize
     #     depthQueue = [] * queueSize
-    #     dxList = [0]
-    #     dyList = [0]
-    #     count = 1
+    #     dxQueue = [0]
+    #     dyQueue = [0]
+    #     smoothRange = 1
     #     for i in range(len(rowArr)):
     #         latitude = '{0:.6f}'.format(float(rowArr[i][0]))
     #         longitude = '{0:.6f}'.format(float(rowArr[i][1]))
@@ -432,11 +432,11 @@ class MainForm(Ui_MainWindow):
     #                                           longitude1=float(longitudeQueue[-2:][0]),
     #                                           latitude2=float(latitudeQueue[-2:][1]),
     #                                           longitude2=float(longitudeQueue[-2:][1]))
-    #             direction = locationAPI.direction(bearing=bearing)
+    #             direction = locationAPI.direction2(bearing=bearing)
     #             dx =  dx + direction['dx']
     #             dy = dy + direction['dy']
-    #             dxList.append(dx)
-    #             dyList.append(dy)
+    #             dxQueue.append(dx)
+    #             dyQueue.append(dy)
     #
     #             # Surface plot data
     #             depth = self.axisZ - depth
@@ -458,129 +458,61 @@ class MainForm(Ui_MainWindow):
     #             if (dx == dx) and (dy == dy):
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx, dy=dy + count, dz=0)
+    #                 gls_item.translate(dx=dx, dy=dy + smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx + count, dy=dy, dz=0)
+    #                 gls_item.translate(dx=dx + smoothRange, dy=dy, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx, dy=dy - count, dz=0)
+    #                 gls_item.translate(dx=dx, dy=dy - smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx - count, dy=dy, dz=0)
+    #                 gls_item.translate(dx=dx - smoothRange, dy=dy, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx + count, dy=dy + count, dz=0)
+    #                 gls_item.translate(dx=dx + smoothRange, dy=dy + smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx - count, dy=dy - count, dz=0)
+    #                 gls_item.translate(dx=dx - smoothRange, dy=dy - smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx + count, dy=dy - count, dz=0)
+    #                 gls_item.translate(dx=dx + smoothRange, dy=dy - smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
     #                 gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
     #                 gls_item.scale(x=1, y=1, z=1)
-    #                 gls_item.translate(dx=dx - count, dy=dy + count, dz=0)
+    #                 gls_item.translate(dx=dx - smoothRange, dy=dy + smoothRange, dz=0)
     #                 self.graphicsView.addItem(gls_item)
     #                 self.depthQueue.append(z)
 
         # Scattering test
-        # plt.scatter(dxList, dyList, color='b', marker='o')
+        # plt.scatter(dxQueue, dyQueue, color='b', marker='o')
         # plt.show()
 
-    # def input_virtualData(self):
-    #     data = 'virtual_data.csv'
-    #     f = open('{0}'.format(data), 'r')
-    #     csvReader = csv.reader(f)
-    #
-    #     rowArr = []
-    #     for row in csvReader:
-    #         rowArr.append(row)
-    #     f.close()
-    #
-    #     # Remove label
-    #     del rowArr[0]
-    #
-    #     # Data queue
-    #     queueSize = 2
-    #     latitudeQueue = [] * queueSize
-    #     longitudeQueue = [] * queueSize
-    #     depthQueue = [] * queueSize
-    #     # First point(depth)
-    #     dx, dy = 100, 100   # Center point
-    #     dxList = [dx]
-    #     dyList = [dy]
-    #     for i in range(len(rowArr)):
-    #         latitude = '{0:.6f}'.format(float(rowArr[i][0]))
-    #         longitude = '{0:.6f}'.format(float(rowArr[i][1]))
-    #         depth = float(rowArr[i][2])
-    #
-    #         print(latitude, longitude, depth)
-    #
-    #         latitudeQueue.append(latitude)
-    #         longitudeQueue.append(longitude)
-    #         depthQueue.append(depth)
-    #
-    #         if len(latitudeQueue[-queueSize:]) > 1:
-    #             distance = locationAPI.distance(latitude1=float(latitudeQueue[-2:][0]),
-    #                                             longitude1=float(longitudeQueue[-2:][0]),
-    #                                             latitude2=float(latitudeQueue[-2:][1]),
-    #                                             longitude2=float(longitudeQueue[-2:][1]))
-    #             bearing = locationAPI.bearing(latitude1=float(latitudeQueue[-2:][0]),
-    #                                           longitude1=float(longitudeQueue[-2:][0]),
-    #                                           latitude2=float(latitudeQueue[-2:][1]),
-    #                                           longitude2=float(longitudeQueue[-2:][1]))
-    #             direction = locationAPI.direction(bearing=bearing)
-    #             dx =  dx + direction['dx']
-    #             dy = dy + direction['dy']
-    #             dxList.append(dx)
-    #             dyList.append(dy)
-    #
-    #     if len(dxList) == len(dyList) == len(depthQueue):
-    #         for i in range(len(depthQueue)):
-    #             latitude = dxList[i]
-    #             longitude = dyList[i]
-    #             depth = depthQueue[i]
-    #             depth = self.axisZ - depth
-    #             self.dataArr[latitude, longitude] = depth
-    #
-    #
-    #     # Surface plot data
-    #     z = self.dataArr
-    #     colorMap = self.comboBox_colorMap.currentText()
-    #     cmap = plt.get_cmap(colorMap)
-    #     minZ = np.min(z)
-    #     maxZ = np.max(z)
-    #     rgba_img = cmap((z - minZ) / (maxZ - minZ))
-    #
-    #     # Add a grid to the view
-    #     gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
-    #     gls_item.scale(x=1, y=1, z=1)
-    #     gls_item.translate(dx=-100, dy=-100, dz=0)
-    #     self.graphicsView.addItem(gls_item)
-    #     self.depthQueue.append(z)
-
     def input_virtualData(self):
-        # Update DB
-        self.reset_3D_surface()
-        conn = mysql_connector.connect_mysql()
-        data = mysql_connector.select_data2(conn=conn)
-        firstLatitudeValue = float('{0:.6f}'.format(float(data[0][1])))
-        firstLongitudeValue = float('{0:.6f}'.format(float(data[0][2])))
-        firstDepthValue = float('{0:.6f}'.format(float(data[0][3])))
+        data = 'virtual_data.csv'
+        f = open('{0}'.format(data), 'r')
+        csvReader = csv.reader(f)
+
+        rowArr = []
+        for row in csvReader:
+            rowArr.append(row)
+        f.close()
+
+        # Remove label
+        del rowArr[0]
 
         # Data queue
         queueSize = 2
@@ -589,78 +521,70 @@ class MainForm(Ui_MainWindow):
         depthQueue = [] * queueSize
         # First point(depth)
         dx, dy = 100, 100   # Center point
-        dxList = [dx]
-        dyList = [dy]
-        for i in range(len(data)):
-            '''
-            latitude  : data[i][1]
-            longitude : data[i][2]
-            depth     : data[i][3]
-            '''
-            latitude = float('{0:.6f}'.format(float(data[i][1])))
-            longitude = float('{0:.6f}'.format(float(data[i][2])))
-            depth = float('{0:.6f}'.format(float(data[i][3])))
+        dxQueue = [dx]
+        dyQueue = [dy]
+        for i in range(len(rowArr)):
+            latitude = '{0:.6f}'.format(float(rowArr[i][0]))
+            longitude = '{0:.6f}'.format(float(rowArr[i][1]))
+            depth = float(rowArr[i][2])
+
+            print(latitude, longitude, depth)
 
             latitudeQueue.append(latitude)
             longitudeQueue.append(longitude)
             depthQueue.append(depth)
 
             if len(latitudeQueue[-queueSize:]) > 1:
-                distance = locationAPI.distance(latitude1=latitudeQueue[-2:][0],
-                                                longitude1=longitudeQueue[-2:][0],
-                                                latitude2=latitudeQueue[-2:][1],
-                                                longitude2=longitudeQueue[-2:][1])
-                bearing = locationAPI.bearing(latitude1=latitudeQueue[-2:][0],
-                                              longitude1=longitudeQueue[-2:][0],
-                                              latitude2=latitudeQueue[-2:][1],
-                                              longitude2=longitudeQueue[-2:][1])
-                direction = locationAPI.direction(bearing=bearing)
+                distance = locationAPI.distance(latitude1=float(latitudeQueue[-2:][0]),
+                                                longitude1=float(longitudeQueue[-2:][0]),
+                                                latitude2=float(latitudeQueue[-2:][1]),
+                                                longitude2=float(longitudeQueue[-2:][1]))
+                bearing = locationAPI.bearing(latitude1=float(latitudeQueue[-2:][0]),
+                                              longitude1=float(longitudeQueue[-2:][0]),
+                                              latitude2=float(latitudeQueue[-2:][1]),
+                                              longitude2=float(longitudeQueue[-2:][1]))
+                direction = locationAPI.direction5(bearing=bearing)
                 dx =  dx + direction['dx']
                 dy = dy + direction['dy']
-                dxList.append(dx)
-                dyList.append(dy)
+                dxQueue.append(dx)
+                dyQueue.append(dy)
 
-        if len(dxList) == len(dyList) == len(depthQueue):
-            count = 1
-            _depth = [] * 2
+        if len(dxQueue) == len(dyQueue) == len(depthQueue):
+            smoothRange = 1
+            depthQueue2 = [] * 2
             for i in range(len(depthQueue)):
-                latitude = dxList[i]
-                longitude = dyList[i]
+                latitude = dxQueue[i]
+                longitude = dyQueue[i]
                 depth = depthQueue[i]
                 depth = self.axisZ - depth
                 self.dataArr[latitude, longitude] = depth
 
                 # Apply smoothing graph
-                _depth.append(depth)
-                if (latitude == latitude) and (longitude == longitude):
-                    if len(_depth) > 1:
+                depthQueue2.append(depth)
+                if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
+                    if len(depthQueue2) > 1:
                         # Mapping 될 지점의 Depth 값은 주변의 Depth 값들의 평균 값을 계산하여 적용
-                        depth = float((_depth[-2:][0] + _depth[-2:][1]) / 2)
+                        depth = float((depthQueue2[-2:][0] + depthQueue2[-2:][1]) / 2)
                         # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
                         # 0, 360 Degree (dx=-1, dy=0)
-                        self.dataArr[latitude - count, longitude] = depth
+                        self.dataArr[latitude - smoothRange, longitude] = depth
                         # 45 Degree (dx=-1, dy=+1)
-                        self.dataArr[latitude - count, longitude + count] = depth
+                        self.dataArr[latitude - smoothRange, longitude + smoothRange] = depth
                         # 90 Degree (dx=0, dy=+1)
-                        self.dataArr[latitude, longitude + count] = depth
+                        self.dataArr[latitude, longitude + smoothRange] = depth
                         # 135 Degree (dx=+1, dy=+1)
-                        self.dataArr[latitude + count, longitude + count] = depth
+                        self.dataArr[latitude + smoothRange, longitude + smoothRange] = depth
                         # 180 Degree (dx=+1, dy=0)
-                        self.dataArr[latitude + count, longitude] = depth
+                        self.dataArr[latitude + smoothRange, longitude] = depth
                         # 225 Degree (dx=+1, dy=-1)
-                        self.dataArr[latitude + count, longitude - count] = depth
+                        self.dataArr[latitude + smoothRange, longitude - smoothRange] = depth
                         # 270 Degree (dx=0, dy=-1)
-                        self.dataArr[latitude, longitude - count] = depth
+                        self.dataArr[latitude, longitude - smoothRange] = depth
                         # 315 Degree (dx=-1, dy=-1)
-                        self.dataArr[latitude - count, longitude - count] = depth
-
+                        self.dataArr[latitude - smoothRange, longitude - smoothRange] = depth
 
         # Surface plot data
         z = self.dataArr
-        np.set_printoptions(threshold=np.nan)
-        f = open("data.txt", 'w')
-        f.write(str(z))
-        f.close()
         colorMap = self.comboBox_colorMap.currentText()
         cmap = plt.get_cmap(colorMap)
         minZ = np.min(z)
@@ -673,6 +597,111 @@ class MainForm(Ui_MainWindow):
         gls_item.translate(dx=-100, dy=-100, dz=0)
         self.graphicsView.addItem(gls_item)
         self.depthQueue.append(z)
+
+    # def input_virtualData(self):
+    #     # Update DB
+    #     self.reset_3D_surface()
+    #     conn = mysql_connector.connect_mysql()
+    #     data = mysql_connector.select_data2(conn=conn)
+    #     firstLatitudeValue = float('{0:.6f}'.format(float(data[0][1])))
+    #     firstLongitudeValue = float('{0:.6f}'.format(float(data[0][2])))
+    #     firstDepthValue = float('{0:.6f}'.format(float(data[0][3])))
+    #
+    #     # Data queue
+    #     queueSize = 2
+    #     latitudeQueue = [] * queueSize
+    #     longitudeQueue = [] * queueSize
+    #     depthQueue = [] * queueSize
+    #     # First point(depth)
+    #     dx, dy = 100, 100   # Center point
+    #     dxQueue = [dx]
+    #     dyQueue = [dy]
+    #     for i in range(len(data)):
+    #         '''
+    #         latitude  : data[i][1]
+    #         longitude : data[i][2]
+    #         depth     : data[i][3]
+    #         '''
+    #         latitude = float('{0:.6f}'.format(float(data[i][1])))
+    #         longitude = float('{0:.6f}'.format(float(data[i][2])))
+    #         depth = float('{0:.6f}'.format(float(data[i][3])))
+    #
+    #         latitudeQueue.append(latitude)
+    #         longitudeQueue.append(longitude)
+    #         depthQueue.append(depth)
+    #
+    #         if len(latitudeQueue[-queueSize:]) > 1:
+    #             distance = locationAPI.distance(latitude1=latitudeQueue[-2:][0],
+    #                                             longitude1=longitudeQueue[-2:][0],
+    #                                             latitude2=latitudeQueue[-2:][1],
+    #                                             longitude2=longitudeQueue[-2:][1])
+    #             bearing = locationAPI.bearing(latitude1=latitudeQueue[-2:][0],
+    #                                           longitude1=longitudeQueue[-2:][0],
+    #                                           latitude2=latitudeQueue[-2:][1],
+    #                                           longitude2=longitudeQueue[-2:][1])
+    #             direction = locationAPI.direction2(bearing=bearing)
+    #             dx =  dx + direction['dx']
+    #             dy = dy + direction['dy']
+    #             dxQueue.append(dx)
+    #             dyQueue.append(dy)
+    #
+    #     if len(dxQueue) == len(dyQueue) == len(depthQueue):
+    #         smoothRange = 1
+    #         depthQueue2 = [] * 2
+    #         for i in range(len(depthQueue)):
+    #             '''
+    #                 The latitude and longitude below are normalized data
+    #                 that determines the direction on the 3D graph.
+    #             '''
+    #             latitude = dxQueue[i]
+    #             longitude = dyQueue[i]
+    #             depth = depthQueue[i]
+    #             depth = self.axisZ - depth
+    #             self.dataArr[latitude, longitude] = depth
+    #
+    #             # Apply smoothing graph
+    #             depthQueue2.append(depth)
+    #             if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
+    #                 if len(depthQueue2) > 1:
+    #                     # Mapping 될 지점의 Depth 값은 주변의 Depth 값들의 평균 값을 계산하여 적용
+    #                     depth = float((depthQueue2[-2:][0] + depthQueue2[-2:][1]) / 2)
+    #                     # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
+    #                     # 0, 360 Degree (dx=-1, dy=0)
+    #                     self.dataArr[latitude - smoothRange, longitude] = depth
+    #                     # 45 Degree (dx=-1, dy=+1)
+    #                     self.dataArr[latitude - smoothRange, longitude + smoothRange] = depth
+    #                     # 90 Degree (dx=0, dy=+1)
+    #                     self.dataArr[latitude, longitude + smoothRange] = depth
+    #                     # 135 Degree (dx=+1, dy=+1)
+    #                     self.dataArr[latitude + smoothRange, longitude + smoothRange] = depth
+    #                     # 180 Degree (dx=+1, dy=0)
+    #                     self.dataArr[latitude + smoothRange, longitude] = depth
+    #                     # 225 Degree (dx=+1, dy=-1)
+    #                     self.dataArr[latitude + smoothRange, longitude - smoothRange] = depth
+    #                     # 270 Degree (dx=0, dy=-1)
+    #                     self.dataArr[latitude, longitude - smoothRange] = depth
+    #                     # 315 Degree (dx=-1, dy=-1)
+    #                     self.dataArr[latitude - smoothRange, longitude - smoothRange] = depth
+    #
+    #
+    #     # Surface plot data
+    #     z = self.dataArr
+    #     np.set_printoptions(threshold=np.nan)
+    #     f = open("data.txt", 'w')
+    #     f.write(str(z))
+    #     f.close()
+    #     colorMap = self.comboBox_colorMap.currentText()
+    #     cmap = plt.get_cmap(colorMap)
+    #     minZ = np.min(z)
+    #     maxZ = np.max(z)
+    #     rgba_img = cmap((z - minZ) / (maxZ - minZ))
+    #
+    #     # Add a grid to the view
+    #     gls_item = gl.GLSurfacePlotItem(x=None, y=None, z=z, colors=rgba_img)
+    #     gls_item.scale(x=1, y=1, z=1)
+    #     gls_item.translate(dx=-100, dy=-100, dz=0)
+    #     self.graphicsView.addItem(gls_item)
+    #     self.depthQueue.append(z)
 
 
 
