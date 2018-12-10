@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+import time
 
 from utils.db_connector import DBConnector
 
@@ -26,9 +27,11 @@ for i in range(len(rowArr)):
 
     print(latitude, longitude, depth)
 
-    # db_conn.insert_data2(
-    #     conn=conn,
-    #     latitude=latitude,
-    #     longitude=longitude,
-    #     depth=depth,
-    #     timestamp=timestamp)
+    time.sleep(3)
+
+    db_conn.insert_data2(
+        conn=conn,
+        latitude=latitude,
+        longitude=longitude,
+        depth=depth,
+        timestamp=timestamp)

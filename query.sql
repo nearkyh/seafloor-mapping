@@ -35,6 +35,8 @@ select * from data;
 
 drop table data;
 
+drop table data2;
+
 
 INSERT INTO `seafloor_mapping`.`data` (
 `latitude`, `longitude`, `depth`, `timestamp`
