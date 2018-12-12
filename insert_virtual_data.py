@@ -3,6 +3,7 @@ import csv
 import time
 
 from utils.db_connector import DBConnector
+from utils.location_api import LocationAPI
 
 
 db_conn = DBConnector()
@@ -19,6 +20,8 @@ f.close()
 
 del rowArr[0]
 
+dataQueue = []
+dataQueue2 = []
 for i in range(len(rowArr)):
     latitude = '{0:.6f}'.format(float(rowArr[i][0]))
     longitude = '{0:.6f}'.format(float(rowArr[i][1]))
@@ -26,12 +29,23 @@ for i in range(len(rowArr)):
     timestamp = 0
 
     print(latitude, longitude, depth)
+    dataQueue.append(latitude)
+    dataQueue2.append(longitude)
 
-    time.sleep(3)
+    if len(dataQueue) > 1:
+        distance = LocationAPI().distance(latitude1=float(dataQueue[-2:][0]),
+                                          longitude1=float(dataQueue2[-2:][0]),
+                                          latitude2=float(dataQueue[-2:][1]),
+                                          longitude2=float(dataQueue2[-2:][1]))
+        print(distance)
+        if 8.0 <= distance <= 12.0:
+            print("ok")
 
-    db_conn.insert_data2(
-        conn=conn,
-        latitude=latitude,
-        longitude=longitude,
-        depth=depth,
-        timestamp=timestamp)
+    time.sleep(1)
+
+    # db_conn.insert_data2(
+    #     conn=conn,
+    #     latitude=latitude,
+    #     longitude=longitude,
+    #     depth=depth,
+    #     timestamp=timestamp)

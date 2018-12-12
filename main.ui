@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>998</width>
-    <height>780</height>
+    <width>1140</width>
+    <height>852</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QPushButton" name="pushButton_push">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>250</y>
-      <width>91</width>
+      <x>10</x>
+      <y>220</y>
+      <width>241</width>
       <height>31</height>
      </rect>
     </property>
@@ -30,92 +30,32 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>60</y>
-      <width>711</width>
-      <height>691</height>
+      <x>260</x>
+      <y>0</y>
+      <width>881</width>
+      <height>831</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_loadFile">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>20</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string> Load File</string>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>icons/open.png</normaloff>icons/open.png</iconset>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget_customData">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>60</y>
-      <width>231</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_inputData">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>80</y>
-      <width>91</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Custom Data</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_latitude">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>120</y>
+      <x>10</x>
+      <y>100</y>
       <width>81</width>
       <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>Latitude</string>
+     <string> Latitude</string>
     </property>
    </widget>
    <widget class="QTextEdit" name="textEdit_latitude">
     <property name="geometry">
      <rect>
-      <x>860</x>
-      <y>120</y>
-      <width>97</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_longitude">
-    <property name="geometry">
-     <rect>
-      <x>860</x>
-      <y>160</y>
-      <width>97</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="textEdit_depth">
-    <property name="geometry">
-     <rect>
-      <x>860</x>
-      <y>200</y>
-      <width>97</width>
+      <x>110</x>
+      <y>100</y>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
@@ -123,35 +63,35 @@
    <widget class="QLabel" name="label_longitude">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>160</y>
+      <x>10</x>
+      <y>140</y>
       <width>81</width>
       <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>Longitude</string>
+     <string> Longitude</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_depth">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>200</y>
+      <x>10</x>
+      <y>180</y>
       <width>81</width>
       <height>29</height>
      </rect>
     </property>
     <property name="text">
-     <string>Depth</string>
+     <string> Depth</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_reset">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>720</y>
-      <width>231</width>
+      <x>10</x>
+      <y>790</y>
+      <width>241</width>
       <height>31</height>
      </rect>
     </property>
@@ -162,9 +102,9 @@
    <widget class="QPushButton" name="pushButton_updateDB">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>470</y>
-      <width>211</width>
+      <x>10</x>
+      <y>440</y>
+      <width>241</width>
       <height>31</height>
      </rect>
     </property>
@@ -172,61 +112,12 @@
      <string>Update</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget_filePath">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>611</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_filePath">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>591</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_colorMap">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>310</y>
-      <width>231</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ColorMap</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>300</y>
-      <width>231</width>
-      <height>81</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QComboBox" name="comboBox_colorMap">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>340</y>
-      <width>211</width>
+      <x>10</x>
+      <y>310</y>
+      <width>241</width>
       <height>27</height>
      </rect>
     </property>
@@ -237,38 +128,12 @@
      <number>-1</number>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>390</y>
-      <width>231</width>
-      <height>161</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_database">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>400</y>
-      <width>231</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Database</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_connectDB">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>430</y>
-      <width>211</width>
+      <x>10</x>
+      <y>400</y>
+      <width>241</width>
       <height>31</height>
      </rect>
     </property>
@@ -279,9 +144,9 @@
    <widget class="QPushButton" name="pushButton_disconnectDB">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>510</y>
-      <width>211</width>
+      <x>10</x>
+      <y>480</y>
+      <width>241</width>
       <height>31</height>
      </rect>
     </property>
@@ -289,45 +154,183 @@
      <string>Disconnect</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_virtualData">
+   <widget class="QListWidget" name="listWidget">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>680</y>
-      <width>231</width>
+      <x>0</x>
+      <y>0</y>
+      <width>261</width>
+      <height>831</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(170, 255, 255);</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_depth">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>180</y>
+      <width>141</width>
       <height>31</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Virtual Data</string>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_longitude">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>140</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
     </property>
    </widget>
-   <zorder>listWidget_2</zorder>
+   <widget class="QLabel" name="label_display">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>10</y>
+      <width>81</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string> Display</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_customData">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>60</y>
+      <width>261</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(50, 50, 50);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>  Custom Data</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_mapLayers">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 14pt &quot;나눔고딕&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Map Layers</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_colorMap">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>270</y>
+      <width>261</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(50, 50, 50);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>  Color Map</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3DMapping">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>360</y>
+      <width>261</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(50, 50, 50);
+color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string>  3D Mapping</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>770</y>
+      <width>241</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
    <zorder>listWidget</zorder>
-   <zorder>listWidget_customData</zorder>
-   <zorder>graphicsView</zorder>
-   <zorder>pushButton_loadFile</zorder>
-   <zorder>label_inputData</zorder>
    <zorder>label_latitude</zorder>
    <zorder>textEdit_latitude</zorder>
-   <zorder>textEdit_longitude</zorder>
-   <zorder>textEdit_depth</zorder>
    <zorder>pushButton_push</zorder>
    <zorder>label_longitude</zorder>
    <zorder>label_depth</zorder>
    <zorder>pushButton_reset</zorder>
    <zorder>pushButton_updateDB</zorder>
-   <zorder>listWidget_filePath</zorder>
-   <zorder>label_filePath</zorder>
-   <zorder>label_colorMap</zorder>
    <zorder>comboBox_colorMap</zorder>
-   <zorder>label_database</zorder>
    <zorder>pushButton_connectDB</zorder>
    <zorder>pushButton_disconnectDB</zorder>
-   <zorder>pushButton_virtualData</zorder>
+   <zorder>textEdit_depth</zorder>
+   <zorder>textEdit_longitude</zorder>
+   <zorder>label_customData</zorder>
+   <zorder>label_mapLayers</zorder>
+   <zorder>label_colorMap</zorder>
+   <zorder>label_3DMapping</zorder>
+   <zorder>line</zorder>
+   <zorder>graphicsView</zorder>
+   <zorder>label_display</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <tabstops>
+  <tabstop>listWidget</tabstop>
+  <tabstop>textEdit_latitude</tabstop>
+  <tabstop>textEdit_longitude</tabstop>
+  <tabstop>textEdit_depth</tabstop>
+  <tabstop>pushButton_push</tabstop>
+  <tabstop>comboBox_colorMap</tabstop>
+  <tabstop>pushButton_connectDB</tabstop>
+  <tabstop>pushButton_updateDB</tabstop>
+  <tabstop>pushButton_disconnectDB</tabstop>
+  <tabstop>pushButton_reset</tabstop>
+  <tabstop>graphicsView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
  <slots>
