@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph.Qt import QtCore, QtGui
 
-from utils.ui2 import Ui_MainWindow
+from utils.ui_test import Ui_MainWindow
 from utils.db_connector import DBConnector
 from utils.location_api import LocationAPI
 

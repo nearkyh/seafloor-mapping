@@ -55,7 +55,7 @@ class LocationAPI:
         y0 = 0
         print('# {0}, {1} Degree'.format(degree0, degree360))
         for i in range(directionRange):
-            print('elif ({0} <= bearing < {1}) or ({2} <= bearing < {3}):'.format(degree0 - degreeRange / 2, degree0, degree0, degree0 + degreeRange / 2), "return", {'dx': _x5, 'dy': y0})
+            print('elif ({0} <= bearing <= {1}) or ({2} <= bearing < {3}):'.format(degree0 - degreeRange / 2, degree360, degree0, degree0 + degreeRange / 2), "return", {'dx': _x5, 'dy': y0})
             degree0 += degreeRange
             y0 += 1
 
@@ -90,7 +90,7 @@ class LocationAPI:
         # 315.0 Degree
         if (292.5 <= bearing < 315.0) or (315.0 <= bearing < 337.5): return {'dx': -1, 'dy': -1}
         # 0.0, 360.0 Degree
-        elif (337.5 <= bearing < 0.0) or (0.0 <= bearing < 22.5): return {'dx': -1, 'dy': 0}
+        elif (337.5 <= bearing <= 360.0) or (0.0 <= bearing < 22.5): return {'dx': -1, 'dy': 0}
         # 45.0 Degree
         elif (22.5 <= bearing < 45.0) or (45.0 <= bearing < 67.5): return {'dx': -1, 'dy': 1}
         elif (67.5 <= bearing < 90.0) or (90.0 <= bearing < 112.5): return {'dx': 0, 'dy': 1}
@@ -106,7 +106,7 @@ class LocationAPI:
         if (303.75 <= bearing < 315.0) or (315.0 <= bearing < 326.25): return {'dx': -2, 'dy': -2}
         elif (326.25 <= bearing < 337.5) or (337.5 <= bearing < 348.75): return {'dx': -2, 'dy': -1}
         # 0.0, 360.0 Degree
-        elif (348.75 <= bearing < 0.0) or (0.0 <= bearing < 11.25): return {'dx': -2, 'dy': 0}
+        elif (348.75 <= bearing <= 360.0) or (0.0 <= bearing < 11.25): return {'dx': -2, 'dy': 0}
         elif (11.25 <= bearing < 22.5) or (22.5 <= bearing < 33.75): return {'dx': -2, 'dy': 1}
         # 45.0 Degree
         elif (33.75 <= bearing < 45.0) or (45.0 <= bearing < 56.25): return {'dx': -2, 'dy': 2}
@@ -130,7 +130,7 @@ class LocationAPI:
         elif (322.5 <= bearing < 330.0) or (330.0 <= bearing < 337.5): return {'dy': -2, 'dx': -3}
         elif (337.5 <= bearing < 345.0) or (345.0 <= bearing < 352.5): return {'dy': -1, 'dx': -3}
         # 0.0, 360.0 Degree
-        elif (352.5 <= bearing < 0.0) or (0.0 <= bearing < 7.5): return {'dy': 0, 'dx': -3}
+        elif (352.5 <= bearing <= 360.0) or (0.0 <= bearing < 7.5): return {'dy': 0, 'dx': -3}
         elif (7.5 <= bearing < 15.0) or (15.0 <= bearing < 22.5): return {'dy': 1, 'dx': -3}
         elif (22.5 <= bearing < 30.0) or (30.0 <= bearing < 37.5): return {'dy': 2, 'dx': -3}
         # 45.0 Degree
@@ -163,7 +163,7 @@ class LocationAPI:
         elif (337.5 <= bearing < 342.0) or (342.0 <= bearing < 346.5): return {'dy': -2, 'dx': -5}
         elif (346.5 <= bearing < 351.0) or (351.0 <= bearing < 355.5): return {'dy': -1, 'dx': -5}
         # 0.0, 360.0 Degree
-        elif (355.5 <= bearing < 0.0) or (0.0 <= bearing < 4.5): return {'dy': 0, 'dx': -5}
+        elif (355.5 <= bearing <= 360.0) or (0.0 <= bearing < 4.5): return {'dy': 0, 'dx': -5}
         elif (4.5 <= bearing < 9.0) or (9.0 <= bearing < 13.5): return {'dy': 1, 'dx': -5}
         elif (13.5 <= bearing < 18.0) or (18.0 <= bearing < 22.5): return {'dy': 2, 'dx': -5}
         elif (22.5 <= bearing < 27.0) or (27.0 <= bearing < 31.5): return {'dy': 3, 'dx': -5}
@@ -239,11 +239,15 @@ if __name__ == '__main__':
                                       longitude1=129.131650,
                                       latitude2=35.153054,
                                       longitude2=129.131872)
-
-    bearing = LocationAPI().bearing(latitude1=35.153056,
-                                    longitude1=129.131650,
-                                    latitude2=35.152961,
-                                    longitude2=129.132747)
+    # 35.153141, 129.134522, 38
+    # 35.153222, 129.134513, 39
+    # 35.153314, 129.134503, 37
+    # 35.153405, 129.134494, 35
+    bearing = LocationAPI().bearing(latitude1=35.153141,
+                                    longitude1=129.134522,
+                                    latitude2=35.153222,
+                                    longitude2=129.134513)
+    print(bearing)
 
     bearing2 = LocationAPI().bearing(latitude1=-35.153052,
                                     longitude1=129.132744,

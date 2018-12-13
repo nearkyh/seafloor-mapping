@@ -42,6 +42,7 @@ class MainForm(Ui_MainWindow):
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
 
+        self.initScale = {'x': 10, 'y': 10, 'z': 10}
         self.mapScale = {'x': 1, 'y': 1, 'z': 1}
         self.mapTranslate = {'dx': -100, 'dy': -100, 'dz': 0}
 
@@ -79,6 +80,7 @@ class MainForm(Ui_MainWindow):
         self.pushButton_connectDB.clicked.connect(self.connect_db)
         self.pushButton_updateDB.clicked.connect(self.update_db)
         self.pushButton_disconnectDB.clicked.connect(self.disconnect_db)
+        self.pushButton_filePath.clicked.connect(self.open_filePath)
 
     def colorMapUi(self):
         self.comboBox_colorMap.addItems(self.colorMaps['Perceptually Uniform Sequential'])
@@ -165,17 +167,14 @@ class MainForm(Ui_MainWindow):
 
             # Add a grid to the view
             glg = gl.GLGridItem()
-            glg.scale(x=10, y=10, z=10)
+            glg.scale(x=self.initScale['x'],
+                      y=self.initScale['y'],
+                      z=self.initScale['z'])
             glg.setDepthValue(10) # draw grid after surfaces since they may be translucent
             self.graphicsView.addItem(glg)
 
             # Simple surface plot example
             z = np.array([[0]])
-            # z = np.array([
-            #     [1000, 1200, 1400, 1100],
-            #     [1000, 1200, 1400, 1100],
-            #     [1400, 1400, 1400, 1100],
-            #     [1000, 1400, 1400, 1100]])
             colorMap = self.comboBox_colorMap.currentText()
             cmap = plt.get_cmap(self.colorMap)
             minZ = np.min(z)
@@ -292,6 +291,7 @@ class MainForm(Ui_MainWindow):
             self.reset_3D_surface()
             conn = mysql_connector.connect_mysql()
             data = mysql_connector.select_data2(conn=conn)
+            mysql_connector.close_mysql()
             firstLatitudeValue = float('{0:.6f}'.format(float(data[0][1])))
             firstLongitudeValue = float('{0:.6f}'.format(float(data[0][2])))
             firstDepthValue = float('{0:.6f}'.format(float(data[0][3])))
@@ -403,7 +403,11 @@ class MainForm(Ui_MainWindow):
 
         except Exception as e:
             print("[error code] update_db\n", e)
-            pass
+            # If IndexError:
+            self.axisX += self.initScale['x']
+            self.axisY += self.initScale['y']
+            print(self.axisX, self.axisY)
+            self.update_db()
 
     def set_timer(self):
         self.timer = QtCore.QTimer()
@@ -425,6 +429,142 @@ class MainForm(Ui_MainWindow):
         except Exception as e:
             print("[error code] update_db\n", e)
             pass
+
+    def open_filePath(self):
+        try:
+            fileName = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Your Data')
+            self.label_filePath.setText(fileName[0].split('/')[-1])
+            self.demo_file_data(filePath=fileName[0])
+
+        except Exception as e:
+            print("[error code] open_filePath\n", e)
+            pass
+
+    def demo_file_data(self, filePath):
+        filePath = filePath
+        try:
+            f = open('{0}'.format(filePath), 'r')
+            csvReader = csv.reader(f)
+            data = []
+            for row in csvReader:
+                data.append(row)
+            f.close()
+            del data[0]
+            firstLatitudeValue = float('{0:.6f}'.format(float(data[0][0])))
+            firstLongitudeValue = float('{0:.6f}'.format(float(data[0][1])))
+            firstDepthValue = float('{0:.6f}'.format(float(data[0][2])))
+
+            # Data queue
+            queueSize = 2
+            latitudeQueue = [] * queueSize
+            longitudeQueue = [] * queueSize
+            depthQueue = [] * queueSize
+            # First point(depth)
+            dx, dy = 100, 100   # Center point
+            dxQueue = [dx]
+            dyQueue = [dy]
+            for i in range(len(data)):
+                '''
+                latitude  : data[i][0]
+                longitude : data[i][1]
+                depth     : data[i][2]
+                '''
+                latitude = float('{0:.6f}'.format(float(data[i][0])))
+                longitude = float('{0:.6f}'.format(float(data[i][1])))
+                depth = float('{0:.6f}'.format(float(data[i][2])))
+
+                latitudeQueue.append(latitude)
+                longitudeQueue.append(longitude)
+                depthQueue.append(depth)
+
+                if len(latitudeQueue[-queueSize:]) > 1:
+                    distance = locationAPI.distance(latitude1=latitudeQueue[-2:][0],
+                                                    longitude1=longitudeQueue[-2:][0],
+                                                    latitude2=latitudeQueue[-2:][1],
+                                                    longitude2=longitudeQueue[-2:][1])
+                    bearing = locationAPI.bearing(latitude1=latitudeQueue[-2:][0],
+                                                  longitude1=longitudeQueue[-2:][0],
+                                                  latitude2=latitudeQueue[-2:][1],
+                                                  longitude2=longitudeQueue[-2:][1])
+                    direction = locationAPI.direction3(bearing=bearing)
+                    dx =  dx + direction['dx']
+                    dy = dy + direction['dy']
+                    dxQueue.append(dx)
+                    dyQueue.append(dy)
+
+            # 3D mapping with depth value
+            if len(dxQueue) == len(dyQueue) == len(depthQueue):
+                depthQueue2 = [self.axisZ - depthQueue[0]]
+                for i in range(len(depthQueue)):
+                    '''
+                    The latitude and longitude below are normalized data
+                    that determines the direction on the 3D graph.
+                    '''
+                    latitude = dxQueue[i]
+                    longitude = dyQueue[i]
+                    depth = depthQueue[i]
+                    depth = self.axisZ - depth
+                    self.dataArr[latitude, longitude] = depth
+
+                    # Apply smoothing graph
+                    '''
+                    if locationAPI.direction1: smoothRange = 0
+                    elif locationAPI.direction2: smoothRange = 1
+                    elif locationAPI.direction3: smoothRange = 1
+                    elif locationAPI.direction5: smoothRange = 2
+                    '''
+                    smoothRange = 1
+                    if smoothRange > 0:
+                        depthQueue2.append(depth)
+                        if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
+                            if len(depthQueue2) > 1:
+                                # Mapping 될 지점의 Depth 값은 주변의 Depth 값들의 평균 값을 계산하여 적용
+                                # depth = float((depthQueue2[-2:][0] + depthQueue2[-2:][1]) / 2)
+                                # Mapping 될 지점의 Depth 값은 주변의 Depth 값들 사이의 float 형 난수를 적용
+                                depth = random.uniform(float(depthQueue2[-2:][0]), float(depthQueue2[-2:][1]))
+                                # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
+                                smoothingPoint = LocationAPI().smoothing_point(smoothRange=smoothRange)
+                                for i in smoothingPoint:
+                                    x = i[0]
+                                    y = i[1]
+                                    self.dataArr[latitude + x, longitude + y] = depth
+                    else:
+                        pass
+
+            # Surface plot data
+            z = self.dataArr
+            colorMap = self.comboBox_colorMap.currentText()
+            cmap = plt.get_cmap(colorMap)
+            minZ = np.min(z)
+            maxZ = np.max(z)
+            rgba_img = cmap((z - minZ) / (maxZ - minZ))
+
+            # Add a grid to the view
+            gls_item = gl.GLSurfacePlotItem(x=None,
+                                            y=None,
+                                            z=z,
+                                            colors=rgba_img)
+            gls_item.scale(x=self.mapScale['x'],
+                           y=self.mapScale['y'],
+                           z=self.mapScale['z'])
+            gls_item.translate(dx=self.mapTranslate['dx'],
+                               dy=self.mapTranslate['dy'],
+                               dz=self.mapTranslate['dz'])
+            self.graphicsView.addItem(gls_item)
+            self.depthQueue.append(z)
+
+            # Save data
+            np.set_printoptions(threshold=np.nan)
+            with open('save_data.txt', 'w') as f:
+                f.write(str(z))
+            f.close()
+
+        except Exception as e:
+            print("[error code] demo_file_data\n", e)
+            # If IndexError:
+            self.axisX += self.initScale['x']
+            self.axisY += self.initScale['y']
+            self.demo_file_data(filePath=filePath)
 
 
 
