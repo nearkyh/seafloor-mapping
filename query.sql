@@ -9,9 +9,9 @@ use seafloor_mapping;
 
 create table `data`(
 `_id` int(10) not null auto_increment,
-`latitude` int(10) default null comment 'latitude',
-`longitude` int(10) default null comment 'longitude',
-`depth` int(10) default null comment 'depth',
+`latitude` char(10) default null comment 'latitude',
+`longitude` char(10) default null comment 'longitude',
+`depth` char(10) default null comment 'depth',
 `timestamp` varchar(500) default null comment 'time stamp',
 key `_id` (`_id`)
 ) engine=InnoDB default charset=utf8;

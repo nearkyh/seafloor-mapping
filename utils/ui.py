@@ -164,7 +164,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "3D Seafloor"))
         self.pushButton_push.setText(_translate("MainWindow", "Push"))
         self.label_latitude.setText(_translate("MainWindow", " Latitude"))
         self.label_longitude.setText(_translate("MainWindow", " Longitude"))

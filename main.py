@@ -6,10 +6,12 @@
     Created by: PyQt5 UI code generator 5.11.3
     WARNING! All changes made in this file will be lost!
 
-    Add the following method to ui.py:
-    import pyqtgraph.opengl as gl
-    self.graphicsView = gl.GLViewWidget(self.centralwidget)
-
+    Edit the ui.py :
+        1. self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
+        --> import pyqtgraph.opengl as gl
+            self.graphicsView = gl.GLViewWidget(self.centralwidget)
+        2. MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        --> MainWindow.setWindowTitle(_translate("MainWindow", "3D Seafloor"))
 '''
 
 import sys
@@ -42,9 +44,10 @@ class MainForm(Ui_MainWindow):
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
 
-        self.initScale = {'x': 10, 'y': 10, 'z': 10}
+        self.initScale = {'x': int(self.axisX / 20), 'y': int(self.axisY / 20), 'z': 10}
         self.mapScale = {'x': 1, 'y': 1, 'z': 1}
-        self.mapTranslate = {'dx': -100, 'dy': -100, 'dz': 0}
+        self.mapTranslate = {'dx': -int(self.axisX / 2), 'dy': -int(self.axisY / 2), 'dz': 0}
+        self.cameraPosition = self.axisX * 3 / 2
 
         self.colorMap = 'viridis'
         self.colorMaps = {
@@ -163,7 +166,7 @@ class MainForm(Ui_MainWindow):
             # Set graphics view
             self.graphicsView.show()
             self.graphicsView.setBackgroundColor('k')
-            self.graphicsView.setCameraPosition(distance=300, elevation=None, azimuth=None)
+            self.graphicsView.setCameraPosition(distance=self.cameraPosition, elevation=None, azimuth=None)
 
             # Add a grid to the view
             glg = gl.GLGridItem()
@@ -302,7 +305,7 @@ class MainForm(Ui_MainWindow):
             longitudeQueue = [] * queueSize
             depthQueue = [] * queueSize
             # First point(depth)
-            dx, dy = 100, 100   # Center point
+            dx, dy = int(self.axisX / 2), int(self.axisY / 2)   # Center point
             dxQueue = [dx]
             dyQueue = [dy]
             for i in range(len(data)):
@@ -355,7 +358,7 @@ class MainForm(Ui_MainWindow):
                     elif locationAPI.direction3: smoothRange = 1
                     elif locationAPI.direction5: smoothRange = 2
                     '''
-                    smoothRange = 1
+                    smoothRange = 3
                     if smoothRange > 0:
                         depthQueue2.append(depth)
                         if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
@@ -432,9 +435,16 @@ class MainForm(Ui_MainWindow):
 
     def open_filePath(self):
         try:
-            fileName = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Your Data')
-            self.label_filePath.setText(fileName[0].split('/')[-1])
-            self.demo_file_data(filePath=fileName[0])
+            filePath = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Your Data')
+            fileName = filePath[0].split('/')[-1]
+            self.label_filePath.setText(fileName)
+            fileFormat = fileName.split('.')[-1]
+            if fileFormat == 'csv':
+                self.demo_file_data(filePath=filePath[0])
+            elif fileFormat == '':
+                pass
+            else:
+                errorMsg = QtWidgets.QMessageBox.about(None, "Error", "Please select a csv file.")
 
         except Exception as e:
             print("[error code] open_filePath\n", e)
@@ -460,7 +470,7 @@ class MainForm(Ui_MainWindow):
             longitudeQueue = [] * queueSize
             depthQueue = [] * queueSize
             # First point(depth)
-            dx, dy = 100, 100   # Center point
+            dx, dy = int(self.axisX / 2), int(self.axisY / 2)   # Center point
             dxQueue = [dx]
             dyQueue = [dy]
             for i in range(len(data)):
@@ -486,7 +496,7 @@ class MainForm(Ui_MainWindow):
                                                   longitude1=longitudeQueue[-2:][0],
                                                   latitude2=latitudeQueue[-2:][1],
                                                   longitude2=longitudeQueue[-2:][1])
-                    direction = locationAPI.direction3(bearing=bearing)
+                    direction = locationAPI.direction5(bearing=bearing)
                     dx =  dx + direction['dx']
                     dy = dy + direction['dy']
                     dxQueue.append(dx)
@@ -513,7 +523,7 @@ class MainForm(Ui_MainWindow):
                     elif locationAPI.direction3: smoothRange = 1
                     elif locationAPI.direction5: smoothRange = 2
                     '''
-                    smoothRange = 1
+                    smoothRange = 4
                     if smoothRange > 0:
                         depthQueue2.append(depth)
                         if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):

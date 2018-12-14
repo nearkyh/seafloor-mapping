@@ -8,6 +8,10 @@ class LocationAPI:
         self.R = 6371.01 
         self.degToRad = math.pi / 180.0
 
+        self.dataQueue = []
+        self.availableData = []
+        self.errorRange = {'min': 8.0, 'max': 12.0}
+
     def bearing(self, latitude1, longitude1, latitude2, longitude2):
         phi1 = latitude1 * self.degToRad
         phi2 = latitude2 * self.degToRad
@@ -31,6 +35,23 @@ class LocationAPI:
 
         # in meter
         return self.R * math.acos(math.sin(phi1) * math.sin(phi2) + math.cos(phi1) * math.cos(phi2) * math.cos(lam2 - lam1)) * 1000
+
+    def data_preprocessing(self, latitude1, longitude1, depth1, latitude2, longitude2, depth2):
+        '''
+        10미터 단위의 Depth 데이터만을 뽑아내기 위한 전처리
+        '''
+        distance = self.distance(latitude1, longitude1, latitude2, longitude2)
+        # self.dataQueue.append((latitude1, longitude1, depth1))
+        self.dataQueue.append({'latitude': latitude1, 'longitude': longitude1, 'depth': depth1,})
+
+        if len(self.dataQueue) > 1:
+            min = self.errorRange['min']
+            max = self.errorRange['max']
+            if min <= distance <= max:
+                self.availableData.append(self.dataQueue[0])
+                del self.dataQueue[0]
+            else:
+                del self.dataQueue[1:]
 
     def direction_creator(self, directionRange):
         degreeRange = float(45 / directionRange)
@@ -234,11 +255,14 @@ class LocationAPI:
 
 if __name__ == '__main__':
 
-    # ex) distance == 약 100m
-    distance = LocationAPI().distance(latitude1=35.153056,
-                                      longitude1=129.131650,
-                                      latitude2=35.153054,
-                                      longitude2=129.131872)
+    # ex) distance == 약 10m
+    # 35.152171,129.132659,45.0
+    # 35.152168,129.132771,46.0
+    distance = LocationAPI().distance(latitude1=35.152171,
+                                      longitude1=129.132659,
+                                      latitude2=35.152168,
+                                      longitude2=129.132771)
+    print(distance)
     # 35.153141, 129.134522, 38
     # 35.153222, 129.134513, 39
     # 35.153314, 129.134503, 37
@@ -248,11 +272,6 @@ if __name__ == '__main__':
                                     latitude2=35.153222,
                                     longitude2=129.134513)
     print(bearing)
-
-    bearing2 = LocationAPI().bearing(latitude1=-35.153052,
-                                    longitude1=129.132744,
-                                    latitude2=-35.152960,
-                                    longitude2=129.132639)
 
     locationAPI = LocationAPI()
     direction = locationAPI.direction2(bearing=12.2)

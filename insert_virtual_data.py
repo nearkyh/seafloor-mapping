@@ -9,7 +9,7 @@ from utils.location_api import LocationAPI
 db_conn = DBConnector()
 conn = db_conn.connect_mysql()
 
-data = 'virtual_data.csv'
+data = 'virtual_data2.csv'
 f = open('{0}'.format(data), 'r')
 csvReader = csv.reader(f)
 
@@ -41,7 +41,7 @@ for i in range(len(rowArr)):
         if 8.0 <= distance <= 12.0:
             print("ok")
 
-    # time.sleep(2)
+    time.sleep(2)
 
     db_conn.insert_data2(
         conn=conn,
