@@ -1,5 +1,4 @@
 import math
-import itertools
 
 
 class LocationAPI:
@@ -222,34 +221,6 @@ class LocationAPI:
         elif (283.5 <= bearing < 288.0) or (288.0 <= bearing < 292.5): return {'dy': -5, 'dx': -2}
         elif (292.5 <= bearing < 297.0) or (297.0 <= bearing < 301.5): return {'dy': -5, 'dx': -3}
         elif (301.5 <= bearing < 306.0) or (306.0 <= bearing < 310.5): return {'dy': -5, 'dx': -4}
-
-    def smoothing_point(self, smoothRange):
-        smoothRangeList = []
-        if smoothRange:
-            for i in range(-smoothRange, smoothRange + 1):
-                smoothRangeList.append(i)
-        '''
-        if smoothRange == 1:
-            for i in range(-1, 2): smoothRangeList.append(i)
-        elif smoothRange == 2:
-            for i in range(-2, 3): smoothRangeList.append(i)
-        elif smoothRange == 3:
-            for i in range(-3, 4): smoothRangeList.append(i)
-        elif smoothRange == 4:
-            for i in range(-4, 5): smoothRangeList.append(i)
-        '''
-
-        # Combinations with replacement
-        list_cwr = list(itertools.combinations_with_replacement(smoothRangeList, 2))
-        # Permutations
-        list_p = list(itertools.permutations(smoothRangeList, 2))
-        sum_list = list_cwr + list_p
-        # Remove duplicate elements
-        duplicate_list = list(set(sum_list))
-        # Remove center point(0, 0)
-        duplicate_list.remove((0, 0))
-
-        return duplicate_list
 
 
 

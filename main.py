@@ -31,6 +31,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 from utils.ui import Ui_MainWindow
 from utils.db_connector import DBConnector
 from utils.location_api import LocationAPI
+from utils.smoothing_graph import SmoothingGraph
 
 
 class MainForm(Ui_MainWindow):
@@ -293,7 +294,7 @@ class MainForm(Ui_MainWindow):
             # Update DB
             self.reset_3D_surface()
             conn = mysql_connector.connect_mysql()
-            data = mysql_connector.select_data2(conn=conn)
+            data = mysql_connector.select_data(conn=conn)
             mysql_connector.close_mysql()
             firstLatitudeValue = float('{0:.6f}'.format(float(data[0][1])))
             firstLongitudeValue = float('{0:.6f}'.format(float(data[0][2])))
@@ -331,7 +332,7 @@ class MainForm(Ui_MainWindow):
                                                   longitude1=longitudeQueue[-2:][0],
                                                   latitude2=latitudeQueue[-2:][1],
                                                   longitude2=longitudeQueue[-2:][1])
-                    direction = locationAPI.direction3(bearing=bearing)
+                    direction = locationAPI.direction5(bearing=bearing)
                     dx =  dx + direction['dx']
                     dy = dy + direction['dy']
                     dxQueue.append(dx)
@@ -358,7 +359,7 @@ class MainForm(Ui_MainWindow):
                     elif locationAPI.direction3: smoothRange = 1
                     elif locationAPI.direction5: smoothRange = 2
                     '''
-                    smoothRange = 3
+                    smoothRange = 4
                     if smoothRange > 0:
                         depthQueue2.append(depth)
                         if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
@@ -367,12 +368,20 @@ class MainForm(Ui_MainWindow):
                                 # depth = float((depthQueue2[-2:][0] + depthQueue2[-2:][1]) / 2)
                                 # Mapping 될 지점의 Depth 값은 주변의 Depth 값들 사이의 float 형 난수를 적용
                                 depth = random.uniform(float(depthQueue2[-2:][0]), float(depthQueue2[-2:][1]))
+
                                 # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
-                                smoothingPoint = LocationAPI().smoothing_point(smoothRange=smoothRange)
-                                for i in smoothingPoint:
-                                    x = i[0]
-                                    y = i[1]
-                                    self.dataArr[latitude + x, longitude + y] = depth
+                                # smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
+                                # for i in smoothingPoint:
+                                #     x = i[0]
+                                #     y = i[1]
+                                #     self.dataArr[latitude + x, longitude + y] = depth
+
+                                pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
+                                for pst_num in range(len(pst)):
+                                    for i in pst[pst_num]:
+                                        x = i[0]
+                                        y = i[1]
+                                        self.dataArr[latitude + x, longitude + y] = depth - (pst_num + 1)
                     else:
                         pass
 
@@ -445,6 +454,7 @@ class MainForm(Ui_MainWindow):
                 pass
             else:
                 errorMsg = QtWidgets.QMessageBox.about(None, "Error", "Please select a csv file.")
+                self.label_filePath.setText("")
 
         except Exception as e:
             print("[error code] open_filePath\n", e)
@@ -532,12 +542,20 @@ class MainForm(Ui_MainWindow):
                                 # depth = float((depthQueue2[-2:][0] + depthQueue2[-2:][1]) / 2)
                                 # Mapping 될 지점의 Depth 값은 주변의 Depth 값들 사이의 float 형 난수를 적용
                                 depth = random.uniform(float(depthQueue2[-2:][0]), float(depthQueue2[-2:][1]))
+
                                 # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
-                                smoothingPoint = LocationAPI().smoothing_point(smoothRange=smoothRange)
-                                for i in smoothingPoint:
-                                    x = i[0]
-                                    y = i[1]
-                                    self.dataArr[latitude + x, longitude + y] = depth
+                                # smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
+                                # for i in smoothingPoint:
+                                #     x = i[0]
+                                #     y = i[1]
+                                #     self.dataArr[latitude + x, longitude + y] = depth
+
+                                pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
+                                for pst_num in range(len(pst)):
+                                    for i in pst[pst_num]:
+                                        x = i[0]
+                                        y = i[1]
+                                        self.dataArr[latitude + x, longitude + y] = depth - (pst_num + 1)
                     else:
                         pass
 
