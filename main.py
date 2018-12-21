@@ -41,12 +41,13 @@ class MainForm(Ui_MainWindow):
 
         self.axisX = 200
         self.axisY = 200
-        self.axisZ = 100.0
+        # self.axisZ = 100.0
+        self.axisZ = 20.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
 
         self.initScale = {'x': int(self.axisX / 20), 'y': int(self.axisY / 20), 'z': 10}
-        self.mapScale = {'x': 1, 'y': 1, 'z': 1}
+        self.mapScale = {'x': 1, 'y': 1, 'z': 2}
         self.mapTranslate = {'dx': -int(self.axisX / 2), 'dy': -int(self.axisY / 2), 'dz': 0}
         self.cameraPosition = self.axisX * 3 / 2
 
@@ -249,8 +250,8 @@ class MainForm(Ui_MainWindow):
             #     self.textEdit_latitude.setText("")
             # if str(longitude):
             #     self.textEdit_longitude.setText("")
-            # if str(depth):
-            #     self.textEdit_depth.setText("")
+            if str(depth):
+                self.textEdit_depth.setText("")
 
         except Exception as e:
             print("[error code] custom_3D_surface\n", e)
@@ -332,7 +333,7 @@ class MainForm(Ui_MainWindow):
                                                   longitude1=longitudeQueue[-2:][0],
                                                   latitude2=latitudeQueue[-2:][1],
                                                   longitude2=longitudeQueue[-2:][1])
-                    direction = locationAPI.direction5(bearing=bearing)
+                    direction = locationAPI.direction2(bearing=bearing)
                     dx =  dx + direction['dx']
                     dy = dy + direction['dy']
                     dxQueue.append(dx)
@@ -359,7 +360,7 @@ class MainForm(Ui_MainWindow):
                     elif locationAPI.direction3: smoothRange = 1
                     elif locationAPI.direction5: smoothRange = 2
                     '''
-                    smoothRange = 4
+                    smoothRange = 1
                     if smoothRange > 0:
                         depthQueue2.append(depth)
                         if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
@@ -370,18 +371,18 @@ class MainForm(Ui_MainWindow):
                                 depth = random.uniform(float(depthQueue2[-2:][0]), float(depthQueue2[-2:][1]))
 
                                 # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
-                                # smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
-                                # for i in smoothingPoint:
-                                #     x = i[0]
-                                #     y = i[1]
-                                #     self.dataArr[latitude + x, longitude + y] = depth
+                                smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
+                                for i in smoothingPoint:
+                                    x = i[0]
+                                    y = i[1]
+                                    self.dataArr[latitude + x, longitude + y] = depth
 
-                                pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
-                                for pst_num in range(len(pst)):
-                                    for i in pst[pst_num]:
-                                        x = i[0]
-                                        y = i[1]
-                                        self.dataArr[latitude + x, longitude + y] = depth - (pst_num + 1)
+                                # pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
+                                # for pst_num in range(len(pst)):
+                                #     for i in pst[pst_num]:
+                                #         x = i[0]
+                                #         y = i[1]
+                                #         self.dataArr[latitude + x, longitude + y] = depth - (pst_num + 1)
                     else:
                         pass
 
@@ -394,6 +395,11 @@ class MainForm(Ui_MainWindow):
             rgba_img = cmap((z - minZ) / (maxZ - minZ))
 
             # Add a grid to the view
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
+            #                                 shader='shaded',
+            #                                 color=(0.5, 0.5, 1, 1))
             gls_item = gl.GLSurfacePlotItem(x=None,
                                             y=None,
                                             z=z,
@@ -450,6 +456,7 @@ class MainForm(Ui_MainWindow):
             fileFormat = fileName.split('.')[-1]
             if fileFormat == 'csv':
                 self.demo_file_data(filePath=filePath[0])
+                # self.demo_file_data2(filePath=filePath[0])
             elif fileFormat == '':
                 pass
             else:
@@ -506,7 +513,7 @@ class MainForm(Ui_MainWindow):
                                                   longitude1=longitudeQueue[-2:][0],
                                                   latitude2=latitudeQueue[-2:][1],
                                                   longitude2=longitudeQueue[-2:][1])
-                    direction = locationAPI.direction5(bearing=bearing)
+                    direction = locationAPI.direction2(bearing=bearing)
                     dx =  dx + direction['dx']
                     dy = dy + direction['dy']
                     dxQueue.append(dx)
@@ -514,7 +521,8 @@ class MainForm(Ui_MainWindow):
 
             # 3D mapping with depth value
             if len(dxQueue) == len(dyQueue) == len(depthQueue):
-                depthQueue2 = [self.axisZ - depthQueue[0]]
+                # depthQueue2 = [self.axisZ - depthQueue[0]]
+                depthQueue2 = [depthQueue[0]]
                 for i in range(len(depthQueue)):
                     '''
                     The latitude and longitude below are normalized data
@@ -523,7 +531,8 @@ class MainForm(Ui_MainWindow):
                     latitude = dxQueue[i]
                     longitude = dyQueue[i]
                     depth = depthQueue[i]
-                    depth = self.axisZ - depth
+                    # depth = self.axisZ - depth
+                    depth = depth
                     self.dataArr[latitude, longitude] = depth
 
                     # Apply smoothing graph
@@ -533,7 +542,7 @@ class MainForm(Ui_MainWindow):
                     elif locationAPI.direction3: smoothRange = 1
                     elif locationAPI.direction5: smoothRange = 2
                     '''
-                    smoothRange = 4
+                    smoothRange = 1
                     if smoothRange > 0:
                         depthQueue2.append(depth)
                         if (dxQueue[i] == latitude) and (dyQueue[i] == longitude):
@@ -544,18 +553,18 @@ class MainForm(Ui_MainWindow):
                                 depth = random.uniform(float(depthQueue2[-2:][0]), float(depthQueue2[-2:][1]))
 
                                 # 현재 좌표에 대한 주변 8곳을 현재 좌표의 Depth 값으로 Mapping
-                                # smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
-                                # for i in smoothingPoint:
-                                #     x = i[0]
-                                #     y = i[1]
-                                #     self.dataArr[latitude + x, longitude + y] = depth
+                                smoothingPoint = SmoothingGraph().smoothing_point(smoothRange=smoothRange)
+                                for i in smoothingPoint:
+                                    x = i[0]
+                                    y = i[1]
+                                    self.dataArr[latitude + x, longitude + y] = depth
 
-                                pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
-                                for pst_num in range(len(pst)):
-                                    for i in pst[pst_num]:
-                                        x = i[0]
-                                        y = i[1]
-                                        self.dataArr[latitude + x, longitude + y] = depth - (pst_num + 1)
+                                # pst = SmoothingGraph().partial_smoothing_point(smoothRange=smoothRange)
+                                # for pst_num in range(len(pst)):
+                                #     for i in pst[pst_num]:
+                                #         x = i[0]
+                                #         y = i[1]
+                                #         self.dataArr[latitude + x, longitude + y] = depth - (pst_num + .5)
                     else:
                         pass
 
@@ -571,7 +580,12 @@ class MainForm(Ui_MainWindow):
             gls_item = gl.GLSurfacePlotItem(x=None,
                                             y=None,
                                             z=z,
-                                            colors=rgba_img)
+                                            shader='shaded',
+                                            color=(0.5, 0.5, 1, 1))
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
+            #                                 colors=rgba_img)
             gls_item.scale(x=self.mapScale['x'],
                            y=self.mapScale['y'],
                            z=self.mapScale['z'])
@@ -593,6 +607,53 @@ class MainForm(Ui_MainWindow):
             self.axisX += self.initScale['x']
             self.axisY += self.initScale['y']
             self.demo_file_data(filePath=filePath)
+
+    def demo_file_data2(self, filePath):
+        try:
+            with open(filePath, 'r') as f:
+                csvReader = csv.reader(f)
+                data = []
+                for row in csvReader:
+                    data.append(row)
+
+            del data[0]
+
+            for i in range(len(data)):
+                latitude = int(data[i][0])
+                longitude = int(data[i][1])
+                depth = float(data[i][2])
+                self.dataArr[latitude, longitude] = depth
+
+            # Surface plot data
+            z = self.dataArr
+            colorMap = self.comboBox_colorMap.currentText()
+            cmap = plt.get_cmap(colorMap)
+            minZ = np.min(z)
+            maxZ = np.max(z)
+            rgba_img = cmap((z - minZ) / (maxZ - minZ))
+
+            # Add a grid to the view
+            gls_item = gl.GLSurfacePlotItem(x=None,
+                                            y=None,
+                                            z=z,
+                                            shader='shaded',
+                                            color=(0.5, 0.5, 1, 1))
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
+            #                                 colors=rgba_img)
+            gls_item.scale(x=self.mapScale['x'],
+                           y=self.mapScale['y'],
+                           z=self.mapScale['z'])
+            gls_item.translate(dx=self.mapTranslate['dx'],
+                               dy=self.mapTranslate['dy'],
+                               dz=self.mapTranslate['dz'])
+            self.graphicsView.addItem(gls_item)
+            self.depthQueue.append(z)
+
+        except Exception as e:
+            print("[error code] demo_file_data2\n", e)
+            pass
 
 
 
