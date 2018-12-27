@@ -414,10 +414,12 @@ class MainForm(Ui_MainWindow):
             self.depthQueue.append(z)
 
             # Save data
+            '''
             np.set_printoptions(threshold=np.nan)
             with open('save_data.txt', 'w') as f:
                 f.write(str(z))
             f.close()
+            '''
 
         except Exception as e:
             print("[error code] update_db\n", e)
@@ -451,12 +453,15 @@ class MainForm(Ui_MainWindow):
     def open_filePath(self):
         try:
             filePath = QtWidgets.QFileDialog.getOpenFileName(None, 'Load Your Data')
+            checkFilePath = filePath[0].split('/')[-2]  # Check the directory(sample_data)
             fileName = filePath[0].split('/')[-1]
             self.label_filePath.setText(fileName)
             fileFormat = fileName.split('.')[-1]
             if fileFormat == 'csv':
-                self.demo_file_data(filePath=filePath[0])
-                # self.demo_file_data2(filePath=filePath[0])
+                if checkFilePath == 'sample_data':
+                    self.sample_data(filePath=filePath[0])
+                elif checkFilePath == 'sample_data2':
+                    self.sample_data2(filePath=filePath[0])
             elif fileFormat == '':
                 pass
             else:
@@ -467,7 +472,7 @@ class MainForm(Ui_MainWindow):
             print("[error code] open_filePath\n", e)
             pass
 
-    def demo_file_data(self, filePath):
+    def sample_data(self, filePath):
         filePath = filePath
         try:
             f = open('{0}'.format(filePath), 'r')
@@ -585,6 +590,14 @@ class MainForm(Ui_MainWindow):
             # gls_item = gl.GLSurfacePlotItem(x=None,
             #                                 y=None,
             #                                 z=z,
+            #                                 shader='viewNormalColor')
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
+            #                                 shader='normalColor')
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
             #                                 colors=rgba_img)
             gls_item.scale(x=self.mapScale['x'],
                            y=self.mapScale['y'],
@@ -596,19 +609,21 @@ class MainForm(Ui_MainWindow):
             self.depthQueue.append(z)
 
             # Save data
+            '''
             np.set_printoptions(threshold=np.nan)
             with open('save_data.txt', 'w') as f:
                 f.write(str(z))
             f.close()
+            '''
 
         except Exception as e:
-            print("[error code] demo_file_data\n", e)
+            print("[error code] sample_data\n", e)
             # If IndexError:
             self.axisX += self.initScale['x']
             self.axisY += self.initScale['y']
-            self.demo_file_data(filePath=filePath)
+            self.sample_data(filePath=filePath)
 
-    def demo_file_data2(self, filePath):
+    def sample_data2(self, filePath):
         try:
             with open(filePath, 'r') as f:
                 csvReader = csv.reader(f)
@@ -633,6 +648,7 @@ class MainForm(Ui_MainWindow):
             rgba_img = cmap((z - minZ) / (maxZ - minZ))
 
             # Add a grid to the view
+            # heightColor, shaded, viewNormalColor, edgeHilight, normalColor, balloon
             gls_item = gl.GLSurfacePlotItem(x=None,
                                             y=None,
                                             z=z,
@@ -641,18 +657,22 @@ class MainForm(Ui_MainWindow):
             # gls_item = gl.GLSurfacePlotItem(x=None,
             #                                 y=None,
             #                                 z=z,
+            #                                 shader='viewNormalColor')
+            # gls_item = gl.GLSurfacePlotItem(x=None,
+            #                                 y=None,
+            #                                 z=z,
             #                                 colors=rgba_img)
-            gls_item.scale(x=self.mapScale['x'],
-                           y=self.mapScale['y'],
+            gls_item.scale(x=2,
+                           y=2,
                            z=self.mapScale['z'])
-            gls_item.translate(dx=self.mapTranslate['dx'],
-                               dy=self.mapTranslate['dy'],
+            gls_item.translate(dx=self.mapTranslate['dx']*2,
+                               dy=self.mapTranslate['dy']*2,
                                dz=self.mapTranslate['dz'])
             self.graphicsView.addItem(gls_item)
             self.depthQueue.append(z)
 
         except Exception as e:
-            print("[error code] demo_file_data2\n", e)
+            print("[error code] sample_data2\n", e)
             pass
 
 

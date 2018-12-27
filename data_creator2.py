@@ -53,3 +53,195 @@ for i in range(arrLen):
         lastLatitude = firstLatitude
         lastLongitude = firstLongitude + define
     define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += rightRange
+define = 0
+firstLatitude = lastLatitude + bottomRange
+firstLongitude = lastLongitude
+lastLatitude = 0.0
+lastLongitude = 0.0
+arrLen = 20
+for i in range(arrLen):
+    print('{0:.6f}'.format(firstLatitude) + ',' + '{0:.6f}'.format(firstLongitude + define) + ',')
+    if i+1 == arrLen:
+        lastLatitude = firstLatitude
+        lastLongitude = firstLongitude + define
+    define += leftRange
