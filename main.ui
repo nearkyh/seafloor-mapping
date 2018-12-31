@@ -385,6 +385,19 @@ color: rgb(255, 255, 255);</string>
      </rect>
     </property>
    </widget>
+   <widget class="QGraphicsView" name="colorBar">
+    <property name="geometry">
+     <rect>
+      <x>1020</x>
+      <y>560</y>
+      <width>101</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+   </widget>
    <zorder>listWidget</zorder>
    <zorder>label_latitude</zorder>
    <zorder>pushButton_push</zorder>
@@ -409,6 +422,7 @@ color: rgb(255, 255, 255);</string>
    <zorder>listWidget_filePath</zorder>
    <zorder>label_filePath</zorder>
    <zorder>textEdit_latitude</zorder>
+   <zorder>colorBar</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

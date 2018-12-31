@@ -10,8 +10,13 @@
         1. self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
         --> import pyqtgraph.opengl as gl
             self.graphicsView = gl.GLViewWidget(self.centralwidget)
+
         2. MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         --> MainWindow.setWindowTitle(_translate("MainWindow", "3D Seafloor"))
+
+        3. self.colorBar = QtWidgets.QGraphicsView(self.centralwidget)
+        --> import pyqtgraph as pg
+            self.colorBar = pg.GraphicsView(self.centralwidget)
 '''
 
 import sys
@@ -28,10 +33,12 @@ import matplotlib.pyplot as plt
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pyqtgraph.Qt import QtCore, QtGui
 
-from utils.ui import Ui_MainWindow
+# from utils.ui import Ui_MainWindow
+from utils.ui_test import Ui_MainWindow
 from utils.db_connector import DBConnector
 from utils.location_api import LocationAPI
 from utils.smoothing_graph import SmoothingGraph
+from utils.color_bar import ColorBar
 
 
 class MainForm(Ui_MainWindow):
@@ -41,8 +48,7 @@ class MainForm(Ui_MainWindow):
 
         self.axisX = 200
         self.axisY = 200
-        # self.axisZ = 100.0
-        self.axisZ = 20.0
+        self.axisZ = 100.0
         self.dataArr = np.zeros([self.axisX, self.axisY])
         self.depthQueue = []
 
@@ -117,6 +123,25 @@ class MainForm(Ui_MainWindow):
                                                len(self.colorMaps['Diverging']) +
                                                len(self.colorMaps['Qualitative']) +
                                                14 + 5)
+
+    def view_colorBar(self):
+        try:
+            '''
+            0.0 -> black
+            0.2 -> red
+            0.6 -> yellow
+            1.0 -> white
+            '''
+            stops = np.r_[-1.0, -0.5, 0.5, 1.0]
+            colors = np.array([[0, 0, 1, 0.7], [0, 1, 0, 0.2], [0, 0, 0, 0.8], [1, 0, 0, 1.0]])
+            cm = pg.ColorMap(stops, colors)
+            cb = ColorBar(cm, 20, 200, label='Depth')
+            self.colorBar.scene().addItem(cb)
+            cb.translate(55, 15)
+
+        except Exception as e:
+            print("[error code] view_colorBar\n", e)
+            pass
 
     def update_customData(self):
         try:
@@ -537,7 +562,6 @@ class MainForm(Ui_MainWindow):
                     longitude = dyQueue[i]
                     depth = depthQueue[i]
                     # depth = self.axisZ - depth
-                    depth = depth
                     self.dataArr[latitude, longitude] = depth
 
                     # Apply smoothing graph
@@ -662,8 +686,8 @@ class MainForm(Ui_MainWindow):
             #                                 y=None,
             #                                 z=z,
             #                                 colors=rgba_img)
-            gls_item.scale(x=2,
-                           y=2,
+            gls_item.scale(x=self.mapScale['x']*2,
+                           y=self.mapScale['y']*2,
                            z=self.mapScale['z'])
             gls_item.translate(dx=self.mapTranslate['dx']*2,
                                dy=self.mapTranslate['dy']*2,
@@ -690,6 +714,7 @@ if __name__ == "__main__":
     ui.connection_events()
     ui.init_3D_surface()
     ui.colorMapUi()
+    ui.view_colorBar()
 
     MainWindow.show()
     sys.exit(app.exec_())
