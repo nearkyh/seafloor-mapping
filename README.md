@@ -12,7 +12,7 @@ Software for seafloor measurement and 3D mapping.
 ## Getting Started
 Creating virtualenv
 ```bash
-$ cd Seafloor_Mapping
+$ cd Seafloor-Mapping
 $ virtualenv env --python=python3.5
 $ source env/bin/activate
 ```
